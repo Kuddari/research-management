@@ -1,0 +1,30 @@
+version: "3.8"
+services:
+  app:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    command: ["sh", "start.sh"]
+    volumes:
+      - .:/research
+    env_file:
+      - ./.env
+    image: research:django
+    container_name: research_container
+    depends_on:
+      - postgres_db
+
+  postgres_db:
+    image: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    ports:
+      - "5432:5432" # This line publishes the PostgreSQL port to the host
+
+volumes:
+  postgres_data:
