@@ -1,0 +1,13 @@
+django == 5.0.2
+django-tailwind == 3.7.0
+django-tailwind[reload]
+django-import-export == 3.3.7
+django-admin-interface == 0.28.5
+python-dotenv == 1.0.1
+psycopg2-binary == 2.9.5
+sqlparse == 0.4.4
+django-nested-admin == 4.0.2
+django-select2 == 8.1.2
+pandas == 2.2.1
+sqlalchemy == 2.0.29
+
