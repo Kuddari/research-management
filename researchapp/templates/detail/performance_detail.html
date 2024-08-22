@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 
+    <title>รายละเอียดข้อมูลผลงานดีเด่น</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <div class="relative  pb-12 min-h-screen font-minimon bg-white text-[#164863]">
+        <div class="pt-4 md:pt-8 px-4 md:px-20">
+            <div class="py-2 px-4 my-4 text-xl md:text-2xl bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow">
+                <h1>ข้อมูลผลงานดีเด่น | รายละเอียดผลงานดีเด่น</h1>
+            </div>
+
+            <div class="bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] text-lg md:text-xl text-center py-1 rounded-md drop-shadow-md shadow">
+                <h1>ข้อมูลพื้นฐาน</h1>
+            </div>
+
+            <div class="flex flex-row my-4 text-lg items-start">
+                <div class="w-1/3 lg:w-1/4 px-2 md:px-4 lg:px-8 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] text-left lg:text-right rounded-sm drop-shadow-md shadow">
+                    <h1>ชื่อผลงาน</h1>
+                </div>
+                <div class="flex-1 text-left px-4">
+                    <h1>{{researchperformance.research_name}}</h1>
+                </div>
+            </div>
+
+            <div class="flex flex-row my-4 text-lg items-start">
+                <div class="w-1/3 lg:w-1/4 px-2 md:px-4 lg:px-8 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] text-left lg:text-right rounded-sm drop-shadow-md shadow">
+                    <h1>ชื่อเจ้าของผลงาน</h1>
+                </div>
+                <div class="flex-1 text-left px-4">
+                    <h1>{{researchperformance.research_name}}</h1>
+                </div>
+            </div>
+
+            <div class="flex flex-row my-4 text-lg items-start">
+                <div class="w-1/3 lg:w-1/4 px-2 md:px-4 lg:px-8 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] text-left lg:text-right rounded-sm drop-shadow-md shadow">
+                    <h1>วันเดือนปีที่เผยแพร่</h1>
+                </div>
+                <div class="flex-1 text-left px-4">
+                    <h1>{{researchperformance.date}}</h1>
+                </div>
+            </div>
+
+            <div class="flex flex-row my-4 text-lg items-start">
+                <div class="w-1/3 lg:w-1/4 px-2 md:px-4 lg:px-8 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] text-left lg:text-right rounded-sm drop-shadow-md shadow">
+                    <h1>ต้นสังกัด</h1>
+                </div>
+                <div class="flex-1 text-left px-4">
+                    <h1>{{researchperformance.agency}}</h1>
+                </div>
+            </div>
+
+            <div class="flex flex-row my-4 text-lg items-start">
+                <div class="w-1/3 lg:w-1/4 px-2 md:px-4 lg:px-8 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] text-left lg:text-right rounded-sm drop-shadow-md shadow">
+                    <h1>รายละเอียดผลงาน</h1>
+                </div>
+                <div class="flex-1 text-left px-4">
+                    <h1>{{researchperformance.detail}}</h1>
+                </div>
+            </div>
+
+            <div class="flex flex-row my-4 text-lg items-start">
+                <div class="w-1/3 lg:w-1/4 px-2 md:px-4 lg:px-8 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] text-left lg:text-right rounded-sm drop-shadow-md shadow">
+                    <h1>เอกสารแนบ(PDF)</h1>
+                </div>
+                <div class="flex-1 text-left px-4">
+                    <!-- Check if the file exists to prevent errors in case of empty file fields -->
+                    {% if researchperformance.file %}
+                        <!-- Use the 'url' attribute of the FileField to create a download link -->
+                        <a href="{{ researchperformance.file.url }}" class="hover:text-blue-500" download="{{ researchperformance.file.name|cut:"/" }}">Download File</a>
+                    {% else %}
+                        <h1>No file available</h1>
+                    {% endif %}
+                </div>
+                
+            </div>
+
+            <div class="flex flex-row my-4 text-lg items-start">
+                <div class="w-1/3 lg:w-1/4 px-2 md:px-4 lg:px-8 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] text-left lg:text-right rounded-sm drop-shadow-md shadow">
+                    <h1>URL</h1>
+                </div>
+                <div class="flex-1 text-left px-4">
+                    <h1>{{researchperformance.url}}</h1>
+                </div>
+            </div>
+            
+
+        </div>
+    </div>
+
+
+</body>
+</html>

@@ -1,0 +1,150 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 
+    <title>รายละเอียดMOU</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <div class="relative pb-12 min-h-screen font-minimon bg-slate-100 text-[#164863]">
+        <div class="pt-4 md:pt-8 px-4 md:px-8 lg:px-12 xl:px-20">
+            <div class="py-2 px-4 my-4 text-xl md:text-2xl bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow">
+                <h1>ข้อมูลMOU | รายละเอียดMOU</h1>
+            </div>
+
+            <div class="flex flex-row my-4 text-lg items-start">
+                <div class="w-1/3 lg:w-1/4 px-2 md:px-4 lg:px-8 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] text-left lg:text-right rounded-sm drop-shadow-md shadow">
+                    <h1>โครงการ</h1>
+                </div>
+                <div class="flex-1 text-left px-4">
+                    <h1>{{ mou_query.project }}</h1>
+                </div>
+            </div>
+
+            <div class="flex flex-row my-4 text-lg items-start">
+                <div class="w-1/3 lg:w-1/4 px-2 md:px-4 lg:px-8 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] text-left lg:text-right rounded-sm drop-shadow-md shadow">
+                    <h1>คณะ/หน่วยงานที่รับผิดชอบ</h1>
+                </div>
+                <div class="flex-1 text-left px-4">
+                    <h1>{{ mou_query.faculty }}</h1>
+                </div>
+            </div>
+
+            <div class="flex flex-row my-4 text-lg items-start">
+                <div class="w-1/3 lg:w-1/4 px-2 md:px-4 lg:px-8 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] text-left lg:text-right rounded-sm drop-shadow-md shadow">
+                    <h1>ประเภทสนับสนุน</h1>
+                </div>
+                <div class="flex-1 text-left px-4">
+                    <h1>{{ mou_query.support_type }}</h1>
+                </div>
+            </div>
+
+            <div class="flex flex-row my-4 text-lg items-start">
+                <div class="w-1/3 lg:w-1/4 px-2 md:px-4 lg:px-8 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] text-left lg:text-right rounded-sm drop-shadow-md shadow">
+                    <h1>วันที่ทำความร่วมมือ</h1>
+                </div>
+                <div class="flex-1 text-left px-4">
+                    <h1>{{ mou_query.promise_start_date }}</h1>
+                </div>
+            </div>
+
+            <div class="flex flex-row my-4 text-lg items-start">
+                <div class="w-1/3 lg:w-1/4 px-2 md:px-4 lg:px-8 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] text-left lg:text-right rounded-sm drop-shadow-md shadow">
+                    <h1>วันที่เริ่มโครงการ</h1>
+                </div>
+                <div class="flex-1 text-left px-4">
+                    <h1>{{ mou_query.project_start_date }}</h1>
+                </div>
+            </div>
+
+            <div class="flex flex-row my-4 text-lg items-start">
+                <div class="w-1/3 lg:w-1/4 px-2 md:px-4 lg:px-8 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] text-left lg:text-right rounded-sm drop-shadow-md shadow">
+                    <h1>วันที่สิ้นสุดโครงการ</h1>
+                </div>
+                <div class="flex-1 text-left px-4">
+                    <h1>{{ mou_query.project_end_date }}</h1>
+                </div>
+            </div>
+
+            <div class="flex flex-row my-4 text-lg items-start">
+                <div class="w-1/3 lg:w-1/4 px-2 md:px-4 lg:px-8 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] text-left lg:text-right rounded-sm drop-shadow-md shadow">
+                    <h1>ระดับความสำเร็จ</h1>
+                </div>
+                <div class="flex-1 text-left px-4">
+                    <h1>{{ mou_query.success_level }}</h1>
+                </div>
+            </div>
+
+            <div class="flex flex-row my-4 text-lg items-start">
+                <div class="w-1/3 lg:w-1/4 px-2 md:px-4 lg:px-8 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] text-left lg:text-right rounded-sm drop-shadow-md shadow">
+                    <h1>วัตถุประสงค์</h1>
+                </div>
+                <div class="flex-1 text-left px-4">
+                    {% for objectives_lines in objectives_lines %}
+                    <h1>{{ objectives_lines }}</h1>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="flex flex-row my-4 text-lg items-start">
+                <div class="w-1/3 lg:w-1/4 px-2 md:px-4 lg:px-8 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] text-left lg:text-right rounded-sm drop-shadow-md shadow">
+                    <h1>เป้าหมาย</h1>
+                </div>
+                <div class="flex-1 text-left px-4">
+                    {% for goals_lines in goals_lines %}
+                    <h1>{{ goals_lines }}</h1>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] text-lg md:text-xl text-left px-8 py-2 rounded-md drop-shadow-md shadow">
+                <h1>หน่วยงานที่ร่วมสนับสนุน</h1>
+            </div>
+
+            <div class="flex flex-row mt-4 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] text-lg text-center">
+                <div class="w-1/12 border-b-2 border-t-2 border-[#427D9D] py-2 px-2 md:px-4">ลำดับ</div>
+                <div class="w-1/2 border-b-2 border-t-2 border-[#427D9D] py-2 px-2 md:px-4">หน่วยงาน</div>
+                <div class="w-1/4 border-b-2 border-t-2 border-[#427D9D] py-2 px-2 md:px-4">ผู้ลงนาม</div>
+                <div class="w-1/3 border-b-2 border-t-2 border-[#427D9D] py-2 px-2 md:px-4">ตำบล / อำเภอ / จังหวัด</div>
+            </div>
+            
+            {% for org in organizations %}
+            <div class="flex flex-row text-lg text-center">
+                <div class="w-1/12 border-b border-[#427D9D] py-1 px-2 md:px-4">{{ forloop.counter }}</div>
+                <div class="w-1/2 border-b border-[#427D9D] py-1 px-2 md:px-4">{{ org.organization }}</div>
+                <div class="w-1/4 border-b border-[#427D9D] py-1 px-2 md:px-4">{{ org.signatory }}</div>
+                <div class="w-1/3 border-b border-[#427D9D] py-1 px-2 md:px-4">{{ org.address }}</div>
+            </div>
+            {% endfor %}
+
+            <div class="bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] text-lg md:text-xl text-left px-8 py-2 mt-8 mb-4 rounded-md drop-shadow-md shadow">
+                <h1>กิจกรรมในเครือข่ายสนับสนุน</h1>
+            </div>
+            <div class="flex flex-row mt-4 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] text-lg text-center">
+                <div class="w-1/12 border-b-2 border-t-2 border-[#427D9D] py-2 px-4">ลำดับ</div>
+                <div class="w-1/2 md:w-1/3 lg:w-1/2 border-b-2 border-t-2 border-[#427D9D] py-2 px-0 md:px-4">กิจกรรม</div>
+                <div class="w-1/2 md:w-1/2 lg:w-1/3 border-b-2 border-t-2 border-[#427D9D] py-2 px-0 md:px-4">เวลาเริ่ม - เวลาสิ้นสุด</div>
+                <!-- <div class="w-1/3 border-b border-t border-[#427D9D] py-1 px-4">เวลาสิ้นสุด</div> -->
+                <div class="w-1/4 border-b-2 border-t-2 border-[#427D9D] py-2 px-0 md:px-4">ระดับความสำเร็จ</div>
+            </div>
+
+            {% for activity in supporting_activities %}
+            <div class="flex flex-row text-lg text-center">
+                <div class="w-1/12 border-b border-[#427D9D] py-1 px-4">{{ forloop.counter }}</div>
+                <div class="w-1/2 md:w-1/3 lg:w-1/2  border-b border-[#427D9D] py-1 px-0 md:px-4">{{ activity.activity }}</div>
+                <div class="w-1/2 md:w-1/2 lg:w-1/3 border-b border-[#427D9D] py-1 px-0 md:px-4">{{ activity.start_time }} - {{ activity.end_time }}</div>
+                <!-- <div class="w-1/3 border-b border-[#427D9D] py-1 px-4">{{ activity.end_time }}</div> -->
+                <div class="w-1/4 border-b border-[#427D9D] py-1 px-0 md:px-4">{{ activity.success_level }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        
+    </div>
+
+
+</body>
+</html>

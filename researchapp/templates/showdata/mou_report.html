@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    {% load static %}
+    <title>เครือข่ายMOU</title>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <div class="relative bg-slate-100 pb-12 min-h-screen font-minimon text-[#164863]">
+        {% if user.is_authenticated %}
+        <div class="pt-2 md:pt-8 px-4 md:px-12">
+        {% else %}
+        <div class="pt-4 md:pt-16 px-4 md:px-12">
+        {% endif %}
+            <div class="flex flex-row justify-between py-2 px-4 mb-4 text-lg md:text-2xl bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow ">
+                <h1 class="mt-2 md:mt-1">เครือข่ายMOU</h1>
+            </div>
+            
+            <form method="POST" id="filterForm">
+                {% csrf_token %}
+                <div class="py-4 md:py-8 md:px-4 text-3xl bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow ">
+                    <div class="grid md:grid-cols-2 gap-4">
+
+                        <div class="flex flex-col px-8 gap-y-1">
+                            <label for="search" class="text-base md:text-xl">ค้นหาโครงการ</label>
+                            <input type="text" name="search" placeholder="ค้นหาชื่อโครงการ" value="{{ search_query }}" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                        </div>
+
+
+                        <div class="flex flex-col px-8 gap-y-1">
+                            <label class="text-lg font-semibold text-gray-800">ช่วงเวลาที่ต้องการ</label>
+                            <div class="flex gap-x-3">
+                                <input id="startDate" name="startDate" autocomplete="nope" placeholder="วันเริ่มต้น" value="{{request.POST.startDate}}" class="w-full py-2 px-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none" required />
+                                <span class="font-bold mt-1">-</span>
+                                <input id="endDate" name="endDate" autocomplete="nope" placeholder="วันสิ้นสุด" value="{{request.POST.endDate}}" class="w-full  py-2 px-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none" required />
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col px-8 gap-y-1">
+                            <label for="faculty" class="text-base md:text-xl">หน่วยงาน / คณะ</label>
+                            <select name="faculty" id="facultySelect" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                                <option value="">หน่วยงาน / คณะทั้งหมด</option>
+                                {% for faculty in faculties %}
+                                <option value="{{ faculty.id }}" {% if faculty.id|stringformat:"s" == request.POST.faculty %} selected {% endif %}>{{ faculty.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="flex flex-col px-8 gap-y-1">
+                            <label for="support_type" class="text-base md:text-xl">ประเภทการสนับสนุน</label>
+                            <select name="support_type" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                                <option value="">เลือก</option>
+                                {% for support_type in support_type %}
+                                <option value="{{ support_type.0 }}" {% if support_type.0|stringformat:"s" == request.POST.support_type %} selected {% endif %}>{{support_type.1}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    
+                    </div>
+            
+                    <div class="flex justify-center md:justify-end md:mr-8 text-white gap-4">
+                        <button type="submit" name="filterbtn" class="py-2 px-8 mt-6 text-lg bg-[#164863] text-white hover:bg-white hover:text-[#164863] rounded-full drop-shadow-md shadow"><i class="fa-solid fa-magnifying-glass mr-2"></i>ค้นหา</button>
+                        <button type="button" onclick="resetForm();" class="py-2 px-8 mt-6 text-lg bg-gray-600 text-white hover:bg-white hover:text-gray-600 rounded-full drop-shadow-md shadow"><i class="fa-solid fa-rotate mr-2"></i>ล้าง</button>
+                    </div>
+                </div>
+            </form>
+            <div class="mt-8 py-2 px-2 md:px-4 gap-4 md:gap-5 items-center flex flex-row justify-between  w-full text-sm md:text-xl lg:text-2xl bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow ">
+                <h1 class="w-1/12 text-center">ลำดับ</h1>
+                <h1 class="w-1/2 text-center">โครงการMOU</h1>
+                <h1 class="w-1/2 text-center">คณะ/หน่วยงานที่รับผิดชอบ</h1>
+                <h1 class="w-1/4 text-center">ประเภทการสนับสนุน	</h1>
+                <h1 class="w-1/4 text-center">วันที่ทำความร่วมมือ</h1>
+            </div>
+            
+            {% for mou in page_obj %}
+            <a href="{% url 'mou_detail' id=mou.id %}">
+                <div class="mt-2 py-2 px-2 md:px-4 gap-6 md:gap-5 items-center flex flex-row justify-between w-full md:text-lg lg:text-2xl bg-gray-100 hover:bg-[#164863] hover:text-white rounded-lg drop-shadow-md shadow ">
+                    <h1 class="w-1/12 text-center">{{ forloop.counter }}</h1>
+                    <h1 class="w-1/2 text-center">{{ mou.project }}</h1>
+                    <h1 class="w-1/2 text-center">{{ mou.faculty }}</h1>
+                    <h1 class="w-1/4 text-center">{{ mou.support_type }}</h1>
+                    <h1 class="w-1/4 text-center">{{ mou.promise_start_date }}</h1>
+                </div>
+            </a>
+            {% endfor %}
+
+            <div class="pagination text-center text-sm md:text-xl py-12">
+                <span class="step-links">
+                    <!-- Dynamically create page links -->
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if num == page_obj.number %}
+                            <span class="underline">{{ num }}</span>
+                        {% else %}
+                            <a href="?page={{ num }}">{{ num }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </span>
+            </div>
+
+        </div>
+    </div>
+    
+    <script src="{% static 'js/javascripts.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script> <!-- Thai locale -->
+
+    <script>
+      // Initialize flatpickr for startDate and endDate inputs
+      flatpickr("#startDate", {
+        dateFormat: "d-m-Y",
+        locale: "th", // Specify Thai locale
+        onChange: function(selectedDates, dateStr, instance) {
+          // Set minDate of endDate picker to startDate value
+          instance.config.maxDate = document.getElementById("endDate").value;
+        }
+      });
+    
+      flatpickr("#endDate", {
+        dateFormat: "d-m-Y",
+        locale: "th", // Specify Thai locale
+        onChange: function(selectedDates, dateStr, instance) {
+          // Set maxDate of startDate picker to endDate value
+          instance.config.minDate = document.getElementById("startDate").value;
+        }
+      });
+    </script>
+
+
+    <script>
+        function resetForm() {
+            // Reset the form
+            document.getElementById("filterForm").reset();
+            
+            // Reload the page with default filter settings
+            window.location.href = "{% url 'mou_report' %}"; // Replace 'your_view_name' with the name of your view
+        }
+    </script>
+
+
+</body>
+</html>

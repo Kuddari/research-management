@@ -1,0 +1,228 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load humanize %}
+    {% load static %}
+    <title>การเผยแพร่ผลงานวิจัย</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    
+
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <div class="relative bg-slate-100 pb-12 min-h-screen font-minimon text-[#164863]">
+        {% if user.is_authenticated %}
+        <div class="pt-2 md:pt-8 px-4 md:px-12">
+        {% else %}
+        <div class="pt-4 md:pt-16 px-4 md:px-12">
+        {% endif %}
+            <div class="flex flex-row py-2 px-4 mb-4 text-lg md:text-2xl bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow ">
+                <h1 class="mt-2 md:mt-1">การเผยแพร่ผลงานวิจัย</h1>
+            </div>
+            
+            <form method="POST" id="filterForm">
+                {% csrf_token %}
+                <div class="pb-8 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow">
+                    <div class="pt-4 md:px-4 grid md:grid-cols-3">
+
+                        <div class="flex flex-col px-4 gap-y-1">
+                            <label for="search" class="text-base md:text-xl">ค้นหา</label>
+                            <input type="text" name="search" value="{{ search_query }}" placeholder="คำค้น (ค้นหาจาก ชื่อ/นามสกุล, ชื่อผลงาน TH/EN)" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                        </div>
+
+                        <div class="flex flex-col px-4 gap-y-1">
+                            <label for="faculty" class="text-base md:text-xl">หน่วยงาน / คณะ</label>
+                            <select name="faculty" id="facultySelect" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                                <option value="">หน่วยงาน / คณะทั้งหมด</option>
+                                {% for faculty in faculties %}
+                                <option value="{{ faculty.id }}" {% if faculty.id|stringformat:"s" == request.POST.faculty %} selected {% endif %}>{{ faculty.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+            
+                        <div class="flex flex-col px-4 gap-y-1">
+                            <label for="department" class="text-base md:text-xl">ฝ่ายงาน / สาขา</label>
+                            <select name="department" id="departmentSelect" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                                <option value="">ฝ่ายงาน / สาขาทั้งหมด</option>
+                                {% for department in departments %}
+                                <option value="{{ department.id }}" {% if department.id|stringformat:"s" == request.POST.department %} selected {% endif %}>{{ department.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+
+                    </div>
+    
+                    <div class="py-4 md:py-8 md:px-4 grid md:grid-cols-3">
+
+                        <div class="flex flex-col px-4 gap-y-1">
+                            <label for="publice_year" class="text-base md:text-xl">ปีการเผยแพร่</label>
+                            <select type="text" name="publice_year" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none" >
+                                <option value="">เลือก</option>
+                                {% for year in years %}
+                                <option value="{{ year }}" {% if year|stringformat:"s" == request.POST.publice_year %} selected {% endif %}>{{ year }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="flex flex-col px-4 gap-y-1">
+                            <label for="type" class="text-base md:text-xl">ประเภทผลงานเผยแพร่</label>
+                            <select type="text" name="type" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none" >
+                                <option value="">เลือก</option>
+                                {% for choice in research_work_type_choices %}
+                                <option value="{{ choice.0 }}" {% if choice.0 == request.POST.type %} selected {% endif %}>{{ choice.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+        
+                        <!-- <div class="flex flex-col px-8 gap-y-1">
+                            <label for="publishing_type" class="text-base md:text-xl">ประเภทแหล่งเผยแพร่ </label>
+                            <select type="text" name="publishing_type" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none" >
+                                <option value="">เลือก</option>
+                                {% for choice in publishing_type_choices %}
+                                <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div> -->
+        
+
+                        <div class="flex flex-col px-4 gap-y-1">
+                            <label for="publice_level" class="text-base md:text-xl">ระดับการเผยแพร่</label>
+                            <select type="text" name="publice_level" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none" >
+                                <option value="">เลือก</option>
+                                {% for choice in publishing_level_choices %}
+                                <option value="{{ choice.0 }}" {% if choice.0 == request.POST.publice_level %} selected {% endif %}>{{ choice.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-center md:justify-end md:mr-8 text-white gap-4">
+                            <button type="submit" name="filterbtn" class="py-2 px-8 mt-6 text-lg bg-[#164863] text-white hover:bg-white hover:text-[#164863] hover:bg-white hover:text-[#164863] rounded-full drop-shadow-md shadow"><i class="fa-solid fa-magnifying-glass mr-2"></i>ค้นหา</button>
+                            <button type="button" onclick="resetForm();" class="py-2 px-8 mt-6 text-lg bg-gray-600 text-white hover:bg-white hover:text-gray-600 rounded-full drop-shadow-md shadow"><i class="fa-solid fa-rotate mr-2"></i>ล้าง</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            
+            <div class="mt-8 py-8 md:px-4 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow  min-h-[360px] md:min-h-[480px] lg:min-h-[600px]">
+                <div class="text-center md:text-2xl lg:text-4xl mb-4">
+                    <h1>สถิติโครงการวิจัยจำแนกตามหน่วยงาน</h1>
+                    <h1>มหาวิทยาลัยฟาฏอนี</h1>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2">
+                    <div id="3d-pie-chart" class="h-full md:max-h-[220px] lg:max-h-[330px] 2xl:max-h-[600px]"></div>
+                    <div class="flex flex-col my-8 min-h-[full] md:border-solid md:border-l-2  md:border-cyan-500">
+                        {% for data in chart_data %}
+                        <div class="flex flex-col text-sm md:text-lg lg:text-2xl my-2 border-solid border-b-2  border-cyan-500  mx-12 md:mx-20">
+                            <h1 class="lg:mx-8">{{ data.category }}</h1>
+                            <div class="ml-6 flex flex-row justify-between">
+                                <h1 class="lg:mx-8">{{ data.value|intcomma}}</h1>
+                                <h1 class="lg:mx-8">({{ data.percent|floatformat:"2" }}%)</h1>
+                            </div>
+                        </div>
+                        {% endfor %}  
+                        <div class="flex flex-col text-sm md:text-lg lg:text-2xl my-2 border-solid border-b-2  border-cyan-500 mx-12 md:mx-20">
+                            <h1 class="lg:mx-8">รวมทั้งสิ้น</h1>
+                            <h1 class="ml-14">{{ total|intcomma }}</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 py-2 px-2 md:px-4 gap-4 md:gap-5 text-left md: flex flex-row justify-between  w-full text-sm md:text-xl lg:text-2xl bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow ">
+                <h1 class="w-1/12 text-center">ลำดับ</h1>
+                <h1 class="w-1/2 text-center">ชื่อโครงการวิจัย</h1>
+                <h1 class="w-1/3 text-center">ประเภท</h1>
+                <h1 class="w-1/6 text-center">ปีที่เผยแพร่</h1>
+            </div>
+            
+            {% for research in page_obj %}
+            <a href="{% url 'research_detail' id=research.id %}">
+                <div class="mt-2 py-2 px-2 md:px-4 gap-6 md:gap-5 items-center flex flex-row justify-between w-full md:text-lg lg:text-2xl bg-gray-100 hover:bg-[#164863] hover:text-white rounded-lg drop-shadow-md shadow ">
+                    <h1 class="w-1/12 text-center">{{ forloop.counter }}</h1>
+                    <h1 class="w-1/2 text-center">{{research.research_nameTH}}</h1>
+                    {% if research_project.work_type == 'อื่นๆ' %}
+                    <h1 class="w-1/3 text-center">{{research.work_type}}</h1>
+                    {% else %}
+                    <h1 class="w-1/3 text-center">{{ research.publishing_type }}</h1>
+                    {% endif %}
+                    <h1 class="w-1/6 text-center">{{research.publishing_year}}</h1>
+                </div>
+            </a>
+            {% endfor %}
+
+            <div class="pagination text-center text-sm md:text-xl py-12">
+                <span class="step-links">
+                    
+                    <!-- Dynamically create page links -->
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if num == page_obj.number %}
+                            <span class="underline">{{ num }}</span>
+                        {% else %}
+                            <a href="?page={{ num }}">{{ num }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </span>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="{% static 'js/javascripts.js' %}"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    
+
+    <script>
+        google.charts.load("current", { packages: ["corechart"] });
+        google.charts.setOnLoadCallback(drawChart);
+      
+        function drawChart() {
+          // Define the chart data
+          var chartData = [
+            ['Category', 'Value'],  // Header row
+            // Data rows
+            {% for item in chart_data %}
+              ['{{ item.category }}', {{ item.value }}],
+            {% endfor %}
+          ];
+      
+          // Convert the chart data to a DataTable
+          var data = google.visualization.arrayToDataTable(chartData);
+    
+          var options = {
+                title: '',
+                is3D: true,
+                legend: {
+                    position: 'labeled',
+                    alignment: 'center',
+                },
+                pieSliceText: 'value',
+                selectionMode: 'multiple',
+                seriesType: 'bars',
+                backgroundColor: 'none',
+            };
+      
+          // Instantiate and draw the chart, passing in the data and options
+          var chart = new google.visualization.PieChart(document.getElementById('3d-pie-chart'));
+          chart.draw(data, options);
+        }
+      </script>
+
+
+    <script>
+        function resetForm() {
+            // Reset the form
+            document.getElementById("filterForm").reset();
+            
+            // Reload the page with default filter settings
+            window.location.href = "{% url 'research_project_report' %}"; // Replace 'your_view_name' with the name of your view
+        }
+    </script>
+    
+
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <title>โปรไฟล์</title>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <div class="relative min-h-screen font-minimon text-[#164863]">
+        {% if user.is_authenticated %}
+        <div class="pt-4 md:pt-8">
+        {% else %}
+        <div class="pt-4 md:pt-16">
+        {% endif %}
+            <div class="py-2 px-4 mb-4 text-lg md:text-2xl bg-gradient-to-r from-[#DDF2FD] to-[#ffffff]  min-h-[100px] md:min-h-[180px] drop-shadow-md shadow">
+            </div>
+            <div class="flex justify-between px-4 md:px-36">
+                <div>
+                    {% if user_profile.profile_picture %}
+                    <img class="w-24 h-24 md:w-32 md:h-32 -translate-y-16 md:-translate-y-24" src="{{ user_profile.profile_picture.url }}" alt="">
+                    {% else %}
+                    <img class="w-24 h-24 md:w-32 md:h-32 -translate-y-16 md:-translate-y-24 rounded-sm drop-shadow-md shadow-sm" src="{% static 'images/login-animation.gif' %}" alt="">
+                    {% endif %}
+                    </div>
+                <div class="-translate-y-12 text-lg md:text-2xl">
+                    <h1 class="mb-1">{{ user_profile.name_lastname_th }}</h1>
+                    <h1>{{ user_profile.name_lastname_en }}</h1>
+                </div>
+            </div>
+            <div class="mx-8 my-4 md:my-8 -mt-4 md:ml-44 md:-mt-14 text-lg md:text-xl">
+                <h1>ตำแหน่ง : {{ user_profile.position }}</h1>
+            </div>
+            <div class="mx-8 grid grid-cols-1 lg:grid-cols-2 gap-y-4 md:gap-y-8 lg:gap-x-20 my-8 md:ml-44 lg:my-14 text-lg md:text-xl">
+                <h1>สังกัด / คณะ : {{ user_profile.faculty }}</h1>
+                <h1>ฝ่ายงาน / สาขา : {{ user_profile.department.name  }}</h1>
+            </div>
+
+            <div class="mx-8 grid grid-cols-1 lg:grid-cols-2 gap-y-4 md:gap-y-8 lg:gap-x-20 my-8 md:ml-44 lg:my-14 text-lg md:text-xl">
+                <h1>Email : {{ user_profile.email }}</h1>
+                <h1>โทรศัพท์ : {{ user_profile.telephone_number }}</h1>
+            </div>
+
+            {% if request.user.researcher_profile.id == user_profile.id %}
+            <div class="mr-40 mb-12 text-right text-lg md:text-xl">
+                <a href="{% url 'edit_profile' id=request.user.id %}" class="py-2 px-4 text-lg md:text-xl bg-[#164863] hover:bg-white text-white hover:text-[#164863]  rounded-full drop-shadow-md shadow">แก้ไขข้อมูล</a>
+            </div>
+            {% endif %}
+
+            
+
+            <div class="mx-4 mt-8 md:mx-24 px-4 md:px-8 py-2 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow">
+                <h1 class="text-lg md:text-2xl md:px-8">โครงการวิจัย</h1>
+            </div>
+
+            {% if page_research_projects %}
+                {% for project in page_research_projects %}
+                    {% for researcher in project.internal_researchers.all %}
+                        {% if researcher.name == user_profile %}
+                            {% if request.user.researcher_profile.id == user_profile.id or request.user.researcher_profile.usertype == 'main_admin' %}
+                            <div class="flex md:flex-row justify-between mx-4 md:mx-24 py-2 px-4 md:pl-16 md:pr-8 my-3 text-sm md:text-xl rounded bg-gray-100 drop-shadow-md shadow">
+                                <h1 class="">{{ project.research_nameTH }}</h1>
+                                <div class="flex flex-row gap-8">
+                                    <h1 class="">{{ researcher.research_position }}</h1>
+                                    <a class="hover:text-blue-500" href="{% url 'edit_research_project' id=project.id %}"><i class="fa-solid fa-gear"></i></a>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="flex md:flex-row justify-between mx-4 md:mx-24 py-2 px-4 md:px-16 my-3 text-sm md:text-xl rounded bg-gray-100 drop-shadow-md shadow">
+                                <h1 class="">{{ project.research_nameTH }}</h1>
+                                <h1 class="">{{ researcher.research_position }}</h1>
+                            </div>
+                            {% endif %}
+
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            {% else %}
+                <div class="flex md:flex-row justify-center mx-4 md:mx-24 py-2 px-4 md:px-20 my-3 text-sm md:text-xl rounded bg-gray-100 drop-shadow-md shadow">
+                    <h1>ยังไม่มีโครงการวิจัย</h1>
+                </div>
+            {% endif %}
+
+            <div class="pagination text-center text-sm md:text-xl py-4">
+                <span class="step-links"> 
+                    <!-- Dynamically create page links -->
+                    {% for num in page_projects.paginator.page_range %}
+                        {% if num == page_projects.number %}
+                        <span class="underline">{{num}}</span>
+                        {% else %}
+                            <a href="?page={{ num }}">{{ num }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </span>
+            </div>
+
+
+            <div class="mx-4 mt-8 md:mx-24 px-4 md:px-8 py-2 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow">
+                <h1 class="text-lg md:text-2xl md:px-8">ผลงานวิจัย</h1>
+            </div>
+
+            {% if page_projects %}
+                {% for project in page_projects %}
+                    {% for researcher in project.internal_researchers.all %}
+                        {% if researcher.name == user_profile %}
+                        {% if request.user.researcher_profile.id == user_profile.id or request.user.researcher_profile.usertype == 'main_admin' %}
+                            <div class="flex md:flex-row justify-between mx-4 md:mx-24 py-2 px-4 md:pl-16 md:pr-8 my-3 text-sm md:text-xl rounded bg-gray-100 drop-shadow-md shadow">
+                                <h1 class="">{{ project.research_nameTH }}</h1>
+                                <div class="flex flex-row gap-8">
+                                    <h1 class="">{{ researcher.research_position }}</h1>
+                                    <a class="hover:text-blue-500" href="{% url 'edit_research' id=project.id %}"><i class="fa-solid fa-gear"></i></a>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="flex md:flex-row justify-between mx-4 md:mx-24 py-2 px-4 md:px-16 my-3 text-sm md:text-xl rounded bg-gray-100 drop-shadow-md shadow">
+                                <h1 class="">{{ project.research_nameTH }}</h1>
+                                <h1 class="">{{ researcher.research_position }}</h1>
+                            </div>
+                            {% endif %}
+                        {% endif %}                    
+                    {% endfor %}
+                {% endfor %}
+            {% else %}
+                <div class="flex md:flex-row justify-center mx-4 md:mx-24 py-2 px-4 md:px-20 my-3 text-sm md:text-xl rounded bg-gray-100 drop-shadow-md shadow">
+                    <h1>ยังไม่มีผลงานวิจัย</h1>
+                </div>
+            {% endif %}
+
+            <div class="pagination text-center text-sm md:text-xl py-4">
+                <span class="step-links"> 
+                    <!-- Dynamically create page links -->
+                    {% for num in page_projects.paginator.page_range %}
+                        {% if num == page_projects.number %}
+                        <span class="underline">{{num}}</span>
+                        {% else %}
+                            <a href="?page={{ num }}">{{ num }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </span>
+            </div>
+
+            <div class="mx-4 mt-8 md:mx-24 px-4 md:px-8 py-2 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow">
+                <h1 class="text-lg md:text-2xl md:px-8">บริการวิชาการ</h1>
+            </div>
+
+            {% if page_academic %}
+                {% for project in page_academic %}
+                    {% for researcher in project.internal_researchers.all %}
+                        {% if researcher.name == user_profile %}
+                        {% if request.user.researcher_profile.id == user_profile.id or request.user.researcher_profile.usertype == 'main_admin' %}
+                            <div class="flex md:flex-row justify-between mx-4 md:mx-24 py-2 px-4 md:pl-16 md:pr-8 my-3 text-sm md:text-xl rounded bg-gray-100 drop-shadow-md shadow">
+                                <h1 class="">{{ project.workTH }}</h1>
+                                <div class="flex flex-row gap-8">
+                                    <h1 class="">{{ researcher.research_position }}</h1>
+                                    <a class="hover:text-blue-500" href="{% url 'edit_academic' id=project.id %}"><i class="fa-solid fa-gear"></i></a>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="flex md:flex-row justify-between mx-4 md:mx-24 py-2 px-4 md:px-16 my-3 text-sm md:text-xl rounded bg-gray-100 drop-shadow-md shadow">
+                                <h1 class="">{{ project.workTH }}</h1>
+                                <h1 class="">{{ researcher.research_position }}</h1>
+                            </div>
+                            {% endif %}
+                        {% endif %}                    
+                    {% endfor %}
+                {% endfor %}
+            {% else %}
+                <div class="flex md:flex-row justify-center mx-4 md:mx-24 py-2 px-4 md:px-20 my-3 text-sm md:text-xl rounded bg-gray-100 drop-shadow-md shadow">
+                    <h1>ยังไม่มีผลงานวิจัย</h1>
+                </div>
+            {% endif %}
+            <div class="pagination text-center text-sm md:text-xl py-4">
+                <span class="step-links"> 
+                    <!-- Dynamically create page links -->
+                    {% for num in page_academic.paginator.page_range %}
+                        {% if num == page_academic.number %}
+                            <span class="underline">{{ num }}</span>
+                        {% else %}
+                            <a href="?page={{ num }}">{{ num }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </span>
+            </div>
+
+            <div class="mx-4 mt-8 md:mx-24 px-4 md:px-8 py-2 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow">
+                <h1 class="text-lg md:text-2xl md:px-8">ผลงานโดดเด่น</h1>
+            </div>
+
+            {% if page_researchperformance %}
+                {% for project in page_researchperformance %}
+                    {% for researcher in project.internal_researchers.all %}
+                        {% if researcher.name == user_profile %}
+                        {% if request.user.researcher_profile.usertype == 'main_admin' %}
+                        <div class="flex md:flex-row justify-between mx-4 md:mx-24 py-2 px-4 md:pl-16 md:pr-8 my-3 text-sm md:text-xl rounded bg-gray-100 drop-shadow-md shadow">
+                            <h1>{{ project.research_name }}</h1>
+                            <div class="flex flex-row gap-8">
+                                <h1 class="">{{ researcher.research_position }}</h1>
+                                <a class="hover:text-blue-500" href="{% url 'edit_researchperformance' id=project.id %}"><i class="fa-solid fa-gear"></i></a>
+                            </div>
+                            {% else %}
+                            <div class="flex md:flex-row justify-between mx-4 md:mx-24 py-2 px-4 md:pl-16 md:pr-16 my-3 text-sm md:text-xl rounded bg-gray-100 drop-shadow-md shadow">
+                                <h1>{{ project.research_name }}</h1>
+                                <h1>{{ researcher.research_position }}</h1>
+                            </div>
+                            {% endif %}
+                        {% endif %}                    
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            {% else %}
+                <div class="flex md:flex-row justify-center mx-4 md:mx-24 py-2 px-4 md:px-24 my-3 text-sm md:text-xl rounded bg-gray-100 drop-shadow-md shadow">
+                    <h1>ยังไม่มีผลงานวิจัย</h1>
+                </div>
+            {% endif %}    
+            <div class="pagination text-center text-sm md:text-xl py-4">
+                <span class="step-links"> 
+                    <!-- Dynamically create page links -->
+                    {% for num in page_researchperformance.paginator.page_range %}
+                        {% if num == page_researchperformance.number %}
+                            <span class="underline">{{ num }}</span>
+                        {% else %}
+                            <a href="?page={{ num }}">{{ num }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </span>
+            </div>
+
+    </div>
+
+    
+</body>
+</html>

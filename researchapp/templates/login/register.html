@@ -1,0 +1,126 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <title>ลงทะเบียนนักวิจัย</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <div class="relative  min-h-screen font-minimon bg-white text-[#164863]">
+        {% if user.is_authenticated %}
+        <div class="pt-2 md:pt-8 px-4 md:px-12">
+        {% else %}
+        <div class="pt-4 md:pt-16 px-4 md:px-12">
+        {% endif %}
+            <div class="py-2 md:py-4 px-4 mb-4 text-xl md:text-2xl bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-lg shadow-md">
+                <h1>ลงทะเบียนนักวิจัย</h1>
+            </div>
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="py-8 md:px-4 grid md:grid-cols-2 gap-4 text-3xl bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow ">
+                    <div class="flex flex-col px-8 gap-y-1">
+                        <label for="username" class="text-base md:text-xl">Username <span class="text-red-600"> *</span></label>
+                        <input type="text" name="username" value="{{ form_data.username }}" placeholder="ชื่อผู้ใช้" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none" required>
+                    </div>
+
+                    <div class="flex flex-col mx-8">
+                        <label class="text-base md:text-xl" for="password">รหัสผ่าน / Password <span class="text-red-600"> *</span></label>
+                        <div class="flex px-1 -py-2 bg-white rounded-lg border border-gray-300 focus-within:border-2 focus-within:border-blue-500 focus-within:ring-blue-500 focus-within:ring-opacity-50 focus-within::outline-none">
+                            <input name="password" value="{{ form_data.password }}" minlength="8" id="password" type="password" placeholder="รหัสผ่าน" class="w-full bg-white border-none outline-none focus:ring-0" required>
+                            <button type="button" onclick="togglePassword()" class="text-xl px-2">
+                                <i id="passwordIcon" class="fa fa-eye-slash"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col px-8 gap-y-1">
+                        <label for="nameTH" class="text-base md:text-xl">ชื่อ-นามสกุล (TH) <span class="text-red-600"> *</span></label>
+                        <input type="text" name="nameTH" value="{{ form_data.nameTH }}" placeholder="ชื่อ-นามสกุล (TH)" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none" required>
+                    </div>
+
+                    <div class="flex flex-col px-8 gap-y-1">
+                        <label for="nameEN" class="text-base md:text-xl">ชื่อ-นามสกุล (EN) <span class="text-red-600"> *</span></label>
+                        <input type="text" name="nameEN" value="{{ form_data.nameEN }}" placeholder="ชื่อ-นามสกุล (EN)" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none" required>
+                    </div>
+
+                    <div class="flex flex-col px-8 gap-y-1">
+                        <label for="position" class="text-base md:text-xl">เลือกตำแหน่ง <span class="text-red-600"> *</span></label>
+                        <select type="text" name="position"  class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none" required>
+                            <option value="{{ form_data.position }}">เลือกตำแหน่ง</option>
+                            {% for choice in position %}
+                            <option value="{{ choice.0 }}">{{choice.1}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="flex flex-col px-8 gap-y-1">
+                        <label for="faculty" class="text-base md:text-xl">หน่วยงาน / คณะ <span class="text-red-600"> *</span></label>
+                        <select name="faculty" id="faculty" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                            <option value="">เลือกหน่วยงาน / คณะ</option>
+                            {% for faculty in faculties %}
+                            <option value="{{ faculty.id }}">{{ faculty.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="flex flex-col px-8 gap-y-1">
+                        <label for="department" class="text-base md:text-xl">ฝ่ายงาน / สาขา<span class="text-red-600"> *</span></label>
+                        <select name="department" id="department" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                            <option value="">เลือกฝ่ายงาน / สาขา</option>
+                        </select>
+                    </div>
+                    
+                    
+                    <div class="flex flex-col px-8 gap-y-1">
+                        <label for="email" class="text-base md:text-xl">Email <span class="text-red-600"> *</span></label>
+                        <input type="text" name="email" value="{{ form_data.email }}" placeholder="Email" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none" required>
+                    </div>
+                    
+                    <div class="flex flex-col px-8 gap-y-1">
+                        <label for="phonenumber" class="text-base md:text-xl">เบอร์โทรศัพท์ <span class="text-red-600"> *</span></label>
+                        <input type="text" name="phonenumber" placeholder="เบอร์โทรศัพท์" value="{{ form_data.phonenumber }}" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none" required>
+                    </div>
+
+                    <div class="flex flex-col px-8 gap-y-1">
+                        <label for="profile" class="text-base md:text-xl">เลือกโปรไฟล์ / Profile</label>
+                    <div class="flex flex-col text-base">
+                        <label for="imageInput" class="cursor-pointer">
+                            <div id="imageLabel" class="py-2 px-4 rounded-lg bg-white border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">เลือกรูปภาพโปรไฟล์</div>
+                        </label>
+                        <input class="hidden" name="imageInput" id="imageInput"  type="file" accept="image/jpeg,image/png,image/webp,image/gif" data-focusable="true" onchange="updateFileLabel(this, 'imageLabel')" >
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-end py-8">
+                <button type="submit" class="py-2 px-12 text-xl bg-[#164863] hover:bg-white hover:text-[#164863] text-white rounded-full drop-shadow-md shadow ">ยืนยัน</button>
+            </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="{% static 'js/javascripts.js' %}"></script>
+
+    <script>
+        function togglePassword() {
+    const passwordInput = document.getElementById("password");
+    const passwordIcon = document.getElementById("passwordIcon");
+    if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        passwordIcon.classList.remove("fa-eye-slash");
+        passwordIcon.classList.add("fa-eye");
+    } else {
+        passwordInput.type = "password";
+        passwordIcon.classList.remove("fa-eye");
+        passwordIcon.classList.add("fa-eye-slash");
+    }
+}
+
+    </script>
+
+</body>
+</html>

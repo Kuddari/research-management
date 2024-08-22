@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <title>กรอกข้อมูลบริการวิชาการ</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <div class="relative  min-h-screen font-minimon text-[#164863]">
+        {% if user.is_authenticated %}
+        <div class="pt-2 md:pt-8 px-4 md:px-12">
+        {% else %}
+        <div class="pt-4 md:pt-16 px-4 md:px-12">
+        {% endif %}
+            <div class="py-2 px-4 mb-4 text-xl md:text-2xl bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow ">
+                <h1>กรอกข้อมูลบริการวิชาการ</h1>
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+                <div class="py-8 md:px-4 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow ">
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="flex flex-col px-8 gap-y-1">
+                            <label for="workTH" class="text-base md:text-xl">ชื่อผลงาน (TH)<span class="text-red-600"> *</span></label>
+                            <input type="text" name="workTH" placeholder="Name of work (TH)" value="{{academic_project.workTH}}" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none" required>
+                        </div>
+    
+                        <div class="flex flex-col px-8 gap-y-1">
+                            <label for="workEN" class="text-base md:text-xl">ชื่อผลงาน (EN)</label>
+                            <input type="text" name="workEN" placeholder="Name of work (EN)" value="{{academic_project.workEN}}" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none" required>
+                        </div>
+    
+                        <div class="flex flex-col px-8 gap-y-1">
+                            <label for="year" class="text-base md:text-xl">ปีการศึกษา<span class="text-red-600"> *</span></label>
+                            <input type="number" name="year" placeholder="ปีการศึกษา" value="{{academic_project.year}}" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none" required>
+                        </div>
+    
+                        <div class="flex flex-col px-8 gap-y-1">
+                            <label class="text-lg font-semibold text-gray-800">วันเริ่มต้น - วันสิ้นสุด<span class="text-red-600"> *</span></label>
+                            <div class="flex gap-x-3">
+                                <input id="startDate" name="startDate" autocomplete="nope" placeholder="วันเริ่มต้น" value="{{academic_project.startDate}}" class="w-full py-2 px-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none" required />
+                                <span class="font-bold mt-2">-</span>
+                                <input id="endDate" name="endDate" autocomplete="nope" placeholder="วันสิ้นสุด" value="{{academic_project.endDate}}" class="w-full  py-2 px-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none" required />
+                            </div>
+                        </div>
+    
+                        <div class="flex flex-col px-8 gap-y-1">
+                            <label for="work_type" class="text-base md:text-xl">ประเภทโครงการ<span class="text-red-600"> *</span></label>
+                            <select id="work_type" name="work_type" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none" onchange="showOtherField()">
+                                <option value="">เลือก</option>
+                                {% for choice in work_type_choices %}
+                                    <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+    
+                        <div id="other_work_type_div" class="hidden  flex-col px-8 gap-y-1">
+                            <label for="other_work_type" class="text-base md:text-xl">ประเภทโครงการ อื่นๆโปรดระบุ</label>
+                            <input type="text" name="other_work_type" placeholder="กรุณาใส่ประเภทผลงานที่ต้องการ" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                        </div>
+                        
+                        <div class="flex flex-col px-8 gap-y-1">
+                            <label for="integration" class="text-base md:text-xl">ประเภทบูรณาการ<span class="text-red-600"> *</span></label>
+                            <select type="text" name="integration" placeholder="" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none" required>
+                                <option value="{{academic_project.integration}}">{{academic_project.integration}}</option>
+                                {% for choice in integration_choices %}
+                                <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="flex flex-col px-8 gap-y-1">
+                            <label for="academic_type" class="text-base md:text-xl">ประเภทบริการวิชาการ<span class="text-red-600"> *</span></label>
+                            <select type="text" name="academic_type"  class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none" required>
+                                <option value="{{academic_project.academic_type}}">{{academic_project.academic_type}}</option>
+                                {% for choice in academic_type_choices %}
+                                <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="flex flex-col px-8 gap-y-1">
+                            <label for="faculty" class="text-base md:text-xl">หน่วยงาน / คณะ <span class="text-red-600"> *</span></label>
+                            <select name="faculty" id="faculty" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                                <option value="{{academic_project.faculty.name}}">{{academic_project.faculty}}</option>
+                                {% for faculty in faculties %}
+                                <option value="{{ faculty.id }}">{{ faculty.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="flex flex-col px-8 gap-y-1">
+                            <label for="department" class="text-base md:text-xl">ฝ่ายงาน / สาขา<span class="text-red-600"> *</span></label>
+                            <select name="department" id="department" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                                <option value="{{academic_project.department.name}}">{{academic_project.department.name}}</option>
+                            </select>
+                        </div>
+    
+                        <div class="flex flex-col px-8 gap-y-1">
+                            <label for="address" class="text-base md:text-xl">ที่อยู่<span class="text-red-600"> *</span></label>
+                            <input type="text" name="address" placeholder="ที่อยู่" value="{{academic_project.address}}" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none" required>
+                        </div>
+    
+                        <div class="flex flex-col px-8 gap-y-1">
+                            <label for="subdistrict" class="text-base md:text-xl">ตำบล<span class="text-red-600"> *</span></label>
+                            <div class="relative groups">
+                                <div id="dropdown-button-subdistrict" class="inline-flex justify-between w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus-within:border-2 focus-within:border-blue-500 focus-within:ring-blue-500 focus-within:ring-opacity-50 focus-within::outline-none cursor-pointer">
+                                    <span class="mr-2">{{academic_project.subdistrict}}</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 ml-2 -mr-1" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M6.293 9.293a1 1 0 011.414 0L10 11.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <input type="hidden" id="selected-subdistrict" value="{{academic_project.subdistrict}}" name="subdistrict">
+                                <div id="dropdown-menu-subdistrict" class="hidden absolute right-0 w-full max-h-60 overflow-y-auto rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 p-1 space-y-1 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 z-10">
+                                    <!-- Search input -->
+                                    <input id="search-input-subdistrict" class="block w-full px-4 py-2 text-gray-800 border rounded-md border-gray-300 focus:outline-none" type="text" placeholder="ค้นหาตำบล" autocomplete="off">
+                                    <!-- Dropdown content goes here -->
+                                    {% for subdistrict in subdistricts %}
+                                    <li data-value="{{ subdistrict }}" class="block px-4 hover:bg-blue-500 hover:text-white active:bg-blue-100 cursor-pointer rounded-md">{{ subdistrict }}</li>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>                     
+                        
+                        <div class="flex flex-col px-8 gap-y-1">
+                            <label for="district" class="text-base md:text-xl">อำเภอ<span class="text-red-600"> *</span></label>
+                            <div class="relative group">
+                                <div id="dropdown-button-district" class="inline-flex justify-between w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus-within:border-2 focus-within:border-blue-500 focus-within:ring-blue-500 focus-within:ring-opacity-50 focus-within::outline-none cursor-pointer">
+                                    <span class="mr-2">{{academic_project.district}}</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 ml-2 -mr-1" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M6.293 9.293a1 1 0 011.414 0L10 11.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <input type="hidden" id="selected-district" value="{{academic_project.district}}" name="district">
+                                <div id="dropdown-menu-district" class="hidden absolute right-0 w-full max-h-60 overflow-y-auto rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 p-1 space-y-1 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                                    <!-- Search input -->
+                                    <input id="search-input-district" class="block w-full px-4 py-2 text-gray-800 border rounded-md border-gray-300 focus:outline-none" type="text" placeholder="ค้นหาตำบล" autocomplete="off">
+                                    <!-- Dropdown content goes here -->
+                                    {% for district in districts %}
+                                    <li data-value="{{ district }}" class="block px-4 hover:bg-blue-500 hover:text-white active:bg-blue-100 cursor-pointer rounded-md">{{ district }}</li>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                            <div class="flex flex-col px-8 gap-y-1">
+                                <label for="province" class="text-base md:text-xl">จังหวัด<span class="text-red-600"> *</span></label>
+                                <div class="relative group">
+                                    <div id="dropdown-button-province" class="inline-flex justify-between w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus-within:border-2 focus-within:border-blue-500 focus-within:ring-blue-500 focus-within:ring-opacity-50 focus-within::outline-none cursor-pointer">
+                                        <span class="mr-2">{{academic_project.province}}</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 ml-2 -mr-1" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd" d="M6.293 9.293a1 1 0 011.414 0L10 11.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <input type="hidden" id="selected-province" value="{{academic_project.province}}" name="province">
+                                    <div id="dropdown-menu-province" class="hidden absolute right-0 w-full max-h-60 overflow-y-auto rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 p-1 space-y-1 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                                        <!-- Search input -->
+                                        <input id="search-input-province" class="block w-full px-4 py-2 text-gray-800 border rounded-md border-gray-300 focus:outline-none" type="text" placeholder="ค้นหาตำบล" autocomplete="off">
+                                        <!-- Dropdown content goes here -->
+                                        {% for province in provinces %}
+                                        <li data-value="{{ province }}" class="block px-4 hover:bg-blue-500 hover:text-white active:bg-blue-100 cursor-pointer rounded-md">{{ province }}</li>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+
+                    </div>
+                    <div class="flex flex-col px-8 gap-y-1 my-4">
+                        <label for="information" class="text-base md:text-xl">ข้อมูลที่นำไปใช้ประโยชน์<span class="text-red-600"> *</span></label>
+                        <textarea type="text" name="information" rows="5" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">{{academic_project.information}}</textarea>
+                    </div>
+                </div>
+
+            <div class="py-2 px-4 mb-4 my-4 text-lg text-center md:text-xl bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow ">
+                <h1>ข้อมูลนักวิจัย</h1>
+            </div>
+            
+            <div id="addpeople_inside" class="py-8 md:px-4 grid md:grid-cols-2 gap-4 text-3xl bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow ">
+                {% for researcher in current_internal_researchers %}
+                <div class="flex flex-col px-8 gap-y-1">
+                    <label for="name_inside" class="text-base md:text-xl">ชื่อนักวิจัย<span class="text-red-600"> *</span></label>
+                    <select type="text" name="name_inside" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                        <option value="{{ researcher.id }}">{{ researcher.name.name_lastname_th }}</option>
+                        {% for researcher in researchers %}
+                        <option value="{{researcher.id}}">{{researcher.name_lastname_th}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="flex flex-col px-8 gap-y-1">
+                    <label for="position_inside" class="text-base md:text-xl">เลือกตำแหน่ง<span class="text-red-600"> *</span></label>
+                    <select type="text" name="position_inside" placeholder="" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                        <option value="{{ researcher.research_position }}">{{ researcher.research_position }}</option>
+                        {% for choice in internal_research_position_choices %}
+                        <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endfor %}
+
+            </div>
+
+            <div class="flex flex-row justify-center gap-3">
+                <div class="flex justify-center text-center">
+                    <button type="button" onclick="addResearcherinside()" class="bg-[#002D57] py-2 w-36 md:w-52 text-white mt-4 rounded-full">เพิ่มนักวิจัย</button>
+                </div>
+                <div class="flex justify-center text-center">
+                    <button type="button" onclick="deleteResearcherinside()" class="bg-red-500 py-2 w-36 md:w-52 text-white mt-4 rounded-full">ลบนักวิจัย</button>
+                </div>
+                
+            </div>
+            
+
+            <div class="py-2 px-4 mb-4 my-4 text-lg text-center md:text-xl bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow ">
+                <h1>ข้อมูลนักวิจัย (ภายนอก)</h1>
+            </div>
+            
+            <div id="addpeople_outside" class="py-8 md:px-4 grid md:grid-cols-2 gap-4 text-3xl bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow ">
+                {% for researcher in current_external_researchers %}
+                <div class="flex flex-col px-8 gap-y-1">
+                    <label for="name_outside" class="text-base md:text-xl">ชื่อนักวิจัย<span class="text-red-600"> *</span></label>
+                    <input type="text" name="name_outside" placeholder="ชื่อนักวิจัย" value="{{researcher.name}}" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                </div>
+                <div class="flex flex-col px-8 gap-y-1">
+                    <label for="position_inside" class="text-base md:text-xl">เลือกตำแหน่ง<span class="text-red-600"> *</span></label>
+                    <select type="text" name="position_outside" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                        <option value="{{researcher.research_position}}">{{researcher.research_position}}</option>
+                        {% for choice in external_research_position_choices %}
+                        <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endfor %}
+            </div>
+            
+
+            <div class="flex flex-row justify-center gap-3">
+                <div class="flex justify-center text-center">
+                    <button type="button" onclick="addResearcheroutside()" class="bg-[#002D57] py-2 w-36 md:w-52 text-white mt-4 rounded-full">เพิ่มนักวิจัย</button>
+                </div>
+                <div class="flex justify-center text-center">
+                    <button type="button" onclick="deleteResearcheroutside()" class="bg-red-500 py-2 w-36 md:w-52 text-white mt-4 rounded-full">ลบนักวิจัย</button>
+                </div>
+                
+            </div>
+
+            <div class="py-2 px-4 mb-4 my-4 text-lg text-center md:text-xl bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow ">
+                <h1>ด้านงบประมาณ</h1>
+            </div>
+            
+            <div class="py-8 md:px-4 grid md:grid-cols-2 gap-4 text-3xl bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow ">
+                <div class="flex flex-col gap-2 mx-8 py-2 text-base md:text-xl">
+                    <label for="Fund">แหล่งเงินทุน</label>
+                    <div class="flex flex-col bg-white overflow-y-auto hide-scrollbar rounded min-h-[130px] max-h-[130px]">
+                        {% for fund in fund %}
+                        <div class="flex flex-row px-2 py-1 justify-between">
+                                <input class="mr-2 mt-1.5" type="checkbox" id="{{fund.id}}" name="fund" value="{{fund.id}}" {% if fund in academic_project.fund.all %} checked {% endif %}>
+                                
+                                <label class="text-md" for="{{ fund.id }}">{{ fund.fund_from }}</label>
+                                <button type="button" onclick="confirmDeletefund('{{ fund.id }}', '{{ fund.fund_from }}')" class="delete-tag-button ml-auto font-bold">X</button>
+                            </div>
+                        {% endfor %}
+                        <button type="button" id="toggleButtonFund" class="text-4xl">&plus;</button>
+                    </div>
+                </div>
+
+                <div id="addFundBox" class="hidden absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-8 py-4 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-2xl shadow-md min-h-[200px] min-w-[320px]">
+                        <div class="flex flex-col gap-4">
+                            <label for="addfund" class="text-base md:text-xl">เพิ่มแหล่งเงินทุน</label>
+                            <input type="text" name="addfund" placeholder="แหล่งเงินทุน" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                        </div>
+                        <div class="mt-4 flex justify-center text-xl  text-white">
+                            <button type="submit" name="btnaddfund" class="rounded-lg bg-[#164863] hover:bg-blue-500 px-4 py-2">ยืนยัน</button>
+                        </div>
+                </div>
+
+                <div class="flex flex-col gap-2 mx-8 py-2 text-base md:text-xl">
+                    <label for="agency.agency_from">หน่วยงานสนับสนุน</label>
+                    <div class="flex flex-col bg-white overflow-y-auto hide-scrollbar rounded min-h-[130px] max-h-[130px]">
+                        {% for agency in agency %}
+                        <div class="flex flex-row px-2 py-1 justify-between">
+                            <input class="mr-2 mt-1.5" type="checkbox" id="{{ agency.id }}" name="agency" value="{{ agency.id }}" {% if agency in academic_project.agency.all %} checked {% endif %}>
+                            <label class="text-md" for="{{ agency.id }}">{{ agency.agency_from }}</label>
+                            <button type="button" onclick="confirmDeleteagency('{{ agency.id }}', '{{ agency.agency_from }}')" class="delete-tag-button ml-auto font-bold">X</button>
+                        </div>
+                        {% endfor %}
+                        <button type="button" id="toggleButtonAgency" class="text-4xl">&plus;</button>
+                    </div>
+                </div>
+                
+
+                <div id="addAgencyBox" class="hidden absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-8 py-4 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-2xl shadow-md min-h-[200px] min-w-[320px]">
+                        <div class="flex flex-col gap-4">
+                            <label for="addagency" class="text-base md:text-xl">เพิ่มหน่วยงานสนับสนุน</label>
+                            <input type="text" name="addagency" placeholder="หน่วยงานสนับสนุน" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                        </div>
+                        <div class="mt-4 flex justify-center text-xl  text-white">
+                            <button type="submit" name="btnaddagency" class="rounded-lg bg-[#164863] px-4 py-2">ยืนยัน</button>
+                        </div>
+                </div>
+                                
+
+                <div class="flex flex-col px-8 gap-y-1">
+                    <label for="money" class="text-base md:text-xl">จำนวน<span class="text-red-600"> *</span></label>
+                    <input type="text" name="money" placeholder="0" value="{{academic_project.money}}" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                </div>
+
+
+                </div>
+                <div class="py-2 px-4 mb-4 my-4 text-lg text-center md:text-xl bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow ">
+                    <h1>ร่วมบริการวิชาการ</h1>
+                </div>
+                
+                <div class="py-8 md:px-4 grid md:grid-cols-2 gap-4 text-3xl bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow ">
+                    <div class="flex flex-col px-8 gap-y-1">
+                        <label for="organizing_agency" class="text-base md:text-xl">หน่วยงานที่จัด<span class="text-red-600"> *</span></label>
+                        <textarea name="organizing_agency" placeholder="หน่วยงานที่จัด" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">{{academic_project.organizing_agency}}</textarea>
+                    </div>
+                    <div class="flex flex-col px-8 gap-y-1">
+                        <label for="partner_organize" class="text-base md:text-xl">หน่วยงานที่ร่วม<span class="text-red-600"> *</span></label>
+                        <textarea name="partner_organize" placeholder="หน่วยงานที่ร่วม" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none" >{{academic_project.partner_organize}}</textarea>
+                    </div>
+                </div>
+
+
+            <div class="flex justify-end py-8">
+                <button type="submit" name="btn" class="py-2 px-12 text-xl bg-[#164863] text-white hover:bg-white hover:text-[#164863] rounded-full drop-shadow-md shadow ">ยืนยัน</button>
+            </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="{% static 'js/javascripts.js' %}"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        const facultyDropdown = document.querySelector('select[name="faculty"]');
+        const branchDropdown = document.querySelector('select[name="department"]');
+
+        facultyDropdown.addEventListener('change', function() {
+            const selectedFacultyId = this.value;
+            branchDropdown.innerHTML = '<option value="">เลือก</option>';
+            
+            if (selectedFacultyId) {
+                fetch(`/api/departments/?faculty_id=${selectedFacultyId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(department => {
+                            const option = document.createElement('option');
+                            option.value = department.id;
+                            option.textContent = department.name;
+                            branchDropdown.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error('Error fetching departments:', error));
+            }
+        });
+    });
+    </script>
+
+    <script src="{% static 'js/javascripts.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script> <!-- Thai locale -->
+    <script>
+      // Initialize flatpickr for startDate and endDate inputs
+      flatpickr("#startDate", {
+        dateFormat: "d-m-Y",
+        locale: "th", // Specify Thai locale
+        onChange: function(selectedDates, dateStr, instance) {
+          // Set minDate of endDate picker to startDate value
+          instance.config.maxDate = document.getElementById("endDate").value;
+        }
+      });
+    
+      flatpickr("#endDate", {
+        dateFormat: "d-m-Y",
+        locale: "th", // Specify Thai locale
+        onChange: function(selectedDates, dateStr, instance) {
+          // Set maxDate of startDate picker to endDate value
+          instance.config.minDate = document.getElementById("startDate").value;
+        }
+      });
+    </script>
+
+    <script>
+    const dropdownButtonSubdistrict = document.getElementById('dropdown-button-subdistrict');
+    const dropdownMenuSubdistrict = document.getElementById('dropdown-menu-subdistrict');
+    const searchInputSubdistrict = document.getElementById('search-input-subdistrict');
+    const selectedSubdistrictInput = document.getElementById('selected-subdistrict');
+    const itemsSubdistrict = dropdownMenuSubdistrict.querySelectorAll('li');
+
+    // Function to toggle the dropdown visibility
+    function toggleDropdownSubdistrict() {
+        const isHidden = dropdownMenuSubdistrict.classList.contains('hidden');
+        dropdownMenuSubdistrict.classList.toggle('hidden', !isHidden);
+    }
+
+    // Click event to toggle the dropdown
+    dropdownButtonSubdistrict.addEventListener('click', (event) => {
+        event.stopPropagation(); // Prevent click from closing dropdown immediately
+        toggleDropdownSubdistrict();
+    });
+
+    // Event to filter dropdown items based on search input
+    searchInputSubdistrict.addEventListener('input', (event) => {
+        event.stopPropagation(); // Prevent input from closing dropdown
+        const searchTerm = searchInputSubdistrict.value.toLowerCase();
+
+        itemsSubdistrict.forEach((item) => {
+            const text = item.textContent.toLowerCase();
+            item.style.display = text.includes(searchTerm) ? 'block' : 'none';
+        });
+    });
+
+    // Event to select an item and close the dropdown
+    itemsSubdistrict.forEach((item) => {
+        item.addEventListener('click', (event) => {
+            const selectedText = item.textContent.trim();
+            dropdownButtonSubdistrict.querySelector('.mr-2').textContent = selectedText;
+            selectedSubdistrictInput.value = selectedText;
+            toggleDropdownSubdistrict(); // Close the dropdown
+        });
+    });
+
+    document.addEventListener('click', () => {
+        if (!dropdownMenuSubdistrict.classList.contains('hidden')) {
+            dropdownMenuSubdistrict.classList.add('hidden');
+        }
+    });
+
+    dropdownMenuSubdistrict.addEventListener('click', (event) => {
+        event.stopPropagation();
+    });
+</script>
+    
+    <script>
+        const dropdownButtonDistrict = document.getElementById('dropdown-button-district');
+        const dropdownMenuDistrict = document.getElementById('dropdown-menu-district');
+        const searchInputDistrict = document.getElementById('search-input-district');
+        const selectedDistrictInput = document.getElementById('selected-district');
+        const itemsDistrict = dropdownMenuDistrict.querySelectorAll('li');
+        let isOpenDistrict = false;
+
+        function toggleDropdownDistrict() {
+            isOpenDistrict = !isOpenDistrict;
+            dropdownMenuDistrict.classList.toggle('hidden', !isOpenDistrict);
+        }
+
+        dropdownButtonDistrict.addEventListener('click', () => {
+            toggleDropdownDistrict();
+        });
+
+        searchInputDistrict.addEventListener('input', () => {
+            const searchTerm = searchInputDistrict.value.toLowerCase();
+
+            itemsDistrict.forEach((item) => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        itemsDistrict.forEach((item) => {
+            item.addEventListener('click', () => {
+                const selectedText = item.textContent.trim();
+                dropdownButtonDistrict.querySelector('.mr-2').textContent = selectedText;
+                selectedDistrictInput.value = selectedText;
+                toggleDropdownDistrict();
+            });
+        });
+    </script>
+
+    <!-- JavaScript for province dropdown -->
+    <script>
+        const dropdownButtonProvince = document.getElementById('dropdown-button-province');
+        const dropdownMenuProvince = document.getElementById('dropdown-menu-province');
+        const searchInputProvince = document.getElementById('search-input-province');
+        const selectedProvinceInput = document.getElementById('selected-province');
+        const itemsProvince = dropdownMenuProvince.querySelectorAll('li');
+        let isOpenProvince = false;
+
+        function toggleDropdownProvince() {
+            isOpenProvince = !isOpenProvince;
+            dropdownMenuProvince.classList.toggle('hidden', !isOpenProvince);
+        }
+
+        dropdownButtonProvince.addEventListener('click', () => {
+            toggleDropdownProvince();
+        });
+
+        searchInputProvince.addEventListener('input', () => {
+            const searchTerm = searchInputProvince.value.toLowerCase();
+
+            itemsProvince.forEach((item) => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        itemsProvince.forEach((item) => {
+            item.addEventListener('click', () => {
+                const selectedText = item.textContent.trim();
+                dropdownButtonProvince.querySelector('.mr-2').textContent = selectedText;
+                selectedProvinceInput.value = selectedText;
+                toggleDropdownProvince();
+            });
+        });
+    </script>
+
+    <script>
+        function showOtherField() {
+        var workType = document.getElementById("work_type").value;
+        var otherFieldDiv = document.getElementById("other_work_type_div");
+        if (workType == "อื่นๆ") {
+            otherFieldDiv.classList.remove("hidden");
+            otherFieldDiv.classList.add("flex");
+        } else {
+            otherFieldDiv.classList.add("hidden");
+            otherFieldDiv.classList.remove("flex");
+        }
+    }
+    </script>
+    
+       
+    <script>
+        // Function to check if the clicked element is inside the specified container
+        function isClickedInsideElement(element, container) {
+            return container.contains(element);
+        }
+    
+        // Event listener for clicks on the document body
+        document.body.addEventListener("click", function(event) {
+            var addFundBox = document.getElementById("addFundBox");
+            var toggleButtonFund = document.getElementById("toggleButtonFund");
+            var addAgencyBox = document.getElementById("addAgencyBox");
+            var toggleButtonAgency = document.getElementById("toggleButtonAgency");
+    
+            // Check if the clicked element is not inside the addFundBox, toggleButtonFund, addAgencyBox, or toggleButtonAgency
+            if (!isClickedInsideElement(event.target, addFundBox) && !isClickedInsideElement(event.target, toggleButtonFund) && !isClickedInsideElement(event.target, addAgencyBox) && !isClickedInsideElement(event.target, toggleButtonAgency)) {
+                // Hide the addFundBox and addAgencyBox
+                addFundBox.classList.add("hidden");
+                addAgencyBox.classList.add("hidden");
+            }
+        });
+    
+        // Event listener for clicks on the toggleButtonBox for Fund
+        document.getElementById("toggleButtonFund").addEventListener("click", function() {
+            var box = document.getElementById("addFundBox");
+            if (box.classList.contains("hidden")) {
+                box.classList.remove("hidden");
+            } else {
+                box.classList.add("hidden");
+            }
+        });
+    
+        // Event listener for clicks on the toggleButtonBox for Agency
+        document.getElementById("toggleButtonAgency").addEventListener("click", function() {
+            var box = document.getElementById("addAgencyBox");
+            if (box.classList.contains("hidden")) {
+                box.classList.remove("hidden");
+            } else {
+                box.classList.add("hidden");
+            }
+        });
+    </script>
+    
+    
+
+    
+    <script>
+        function addResearcherinside() {
+        // Container where new fields will be added
+        var container = document.getElementById('addpeople_inside');
+
+        // Create new researcher name field
+        var researcherNameDiv = document.createElement('div');
+        researcherNameDiv.className = 'flex flex-col px-8 gap-y-1';
+        researcherNameDiv.innerHTML = `
+            <label for="name_inside" class="text-base md:text-xl">ชื่อนักวิจัย<span class="text-red-600"> *</span></label>
+            <select name="name_inside" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                <option value="">เลือกนักวิจัย</option>
+                {% for researcher in researchers %}
+                    <option value="{{researcher.id}}">{{researcher.name_lastname_th}}</option>
+                {% endfor %}
+            </select>
+        `;
+
+        // Create new researcher position field
+        var researcherPositionDiv = document.createElement('div');
+        researcherPositionDiv.className = 'flex flex-col px-8 gap-y-1';
+        researcherPositionDiv.innerHTML = `
+            <label for="position_inside" class="text-base md:text-xl">เลือกตำแหน่ง<span class="text-red-600"> *</span></label>
+            <select name="position_inside" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                <option value="">เลือกตำแหน่ง</option>
+                {% for choice in internal_research_position_choices %}
+                <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                {% endfor %}
+            </select>
+        `;
+
+        // Append new fields to the container
+        container.appendChild(researcherNameDiv);
+        container.appendChild(researcherPositionDiv);
+    }
+
+
+
+        function addResearcheroutside() {
+            // Container where new fields will be added
+            var container = document.getElementById('addpeople_outside');
+
+            // Create new researcher name field
+            var researcherNameDiv = document.createElement('div');
+            researcherNameDiv.className = 'flex flex-col px-8 gap-y-1';
+            researcherNameDiv.innerHTML = `
+                <label for="name_outside" class="text-base md:text-xl">ชื่อนักวิจัย<span class="text-red-600"> *</span></label>
+                <input type="text" name="name_outside" placeholder="ชื่อนักวิจัย" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+            `;
+
+            // Create new researcher position field
+            var researcherPositionDiv = document.createElement('div');
+            researcherPositionDiv.className = 'flex flex-col px-8 gap-y-1';
+            researcherPositionDiv.innerHTML = `
+                <label for="position_outside" class="text-base md:text-xl">เลือกตำแหน่ง<span class="text-red-600"> *</span></label>
+                <select name="position_outside" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                    <option value="">เลือกตำแหน่ง</option>
+                    <option value="นักวิจัยหลัก">นักวิจัยหลัก</option>
+                    <option value="นักวิจัยรอง">นักวิจัยรอง</option>
+                </select>
+            `;
+            // Append new fields to the container
+            container.appendChild(researcherNameDiv);
+            container.appendChild(researcherPositionDiv);
+        }
+
+        function deleteResearcherinside() {
+            // Container where new fields will be added
+            var container = document.getElementById('addpeople_inside');
+            // Remove the last researcher name field
+            var lastResearcherName = container.querySelector('div:nth-last-child(2)');
+            if (lastResearcherName) {
+                container.removeChild(lastResearcherName);
+            }
+            // Remove the last researcher position field
+            var lastResearcherPosition = container.querySelector('div:last-child');
+            if (lastResearcherPosition) {
+                container.removeChild(lastResearcherPosition);
+            }
+        }
+
+
+
+        function deleteResearcheroutside() {
+            // Container where new fields will be added
+            var container = document.getElementById('addpeople_outside');
+            // Remove the last researcher name field
+            var lastResearcherName = container.querySelector('div:nth-last-child(2)');
+            if (lastResearcherName) {
+                container.removeChild(lastResearcherName);
+            }
+            // Remove the last researcher position field
+            var lastResearcherPosition = container.querySelector('div:last-child');
+            if (lastResearcherPosition) {
+                container.removeChild(lastResearcherPosition);
+            }
+        }
+        
+    </script>
+
+
+</body>
+</html>
+

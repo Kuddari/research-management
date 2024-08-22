@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 
+    <title>กรอกข้อมูล</title>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <div class="relative bg-slate-100  min-h-screen font-minimon text-[#164863]">
+        <div class="pt-12 md:pt-16 px-4 md:px-12">
+            <div class="mx-4 md:mx-12 text-xl md:text-2xl drop-shadow-2xl shadow-sm ">
+                <h1 class="bg-gradient-to-br from-[#DDF2FD] to-[#ffffff] px-4 md:px-12 py-4 rounded-t-lg text-2xl lg:text-4xl">กรอกข้อมูล</h1>
+                <div class="bg-[#9BBEC8] text-center flex flex-col gap-8 rounded-b-lg text-xl pb-8 md:pb-16">
+                    <a class="text-lg md:text-2xl bg-white py-2 px-4 mx-8 md:mx-40 lg:mx-72 xl:mx-80 2xl:mx-[30rem] mt-8 md:mt-16 rounded-lg hover:text-[#9BBEC8]" href="{% url 'research_project' %}">ข้อมูลโครงงานวิจัย</a>
+                    <a class="text-lg md:text-2xl bg-white py-2 px-4 mx-8 md:mx-40 lg:mx-72 xl:mx-80 2xl:mx-[30rem] rounded-lg hover:text-[#9BBEC8]" href="{% url 'research' %}">ข้อมูลผลงานวิจัย</a>
+                    <a class="text-lg md:text-2xl bg-white py-2 px-4 mx-8 md:mx-40 lg:mx-72 xl:mx-80 2xl:mx-[30rem] rounded-lg hover:text-[#9BBEC8]" href="{% url 'academic' %}">บริการวิชาการ</a>
+                    {% if user.is_authenticated %}
+                    {% if request.user.researcher_profile.usertype == 'assistant_admin' %}
+                    <a class="text-lg md:text-2xl bg-white py-2 px-4 mx-8 md:mx-40 lg:mx-72 xl:mx-80 2xl:mx-[30rem] rounded-lg hover:text-[#9BBEC8]" href="{% url 'mou' %}">เครือข่าย MOU</a>
+                    {% elif request.user.researcher_profile.usertype == 'main_admin' %}
+                    <a class="text-lg md:text-2xl bg-white py-2 px-4 mx-8 md:mx-40 lg:mx-72 xl:mx-80 2xl:mx-[30rem] rounded-lg hover:text-[#9BBEC8]" href="{% url 'performance' %}">ผลงานโดดเด่น</a>
+                    <a class="text-lg md:text-2xl bg-white py-2 px-4 mx-8 md:mx-40 lg:mx-72 xl:mx-80 2xl:mx-[30rem] rounded-lg hover:text-[#9BBEC8]" href="{% url 'mou' %}">เครือข่าย MOU</a>
+                    <a class="text-lg md:text-2xl bg-white py-2 px-4 mx-8 md:mx-40 lg:mx-72 xl:mx-80 2xl:mx-[30rem] rounded-lg hover:text-[#9BBEC8]" href="{% url 'researchapp_admin:index' %}">เพิ่มลดข้อมูล</a>
+                    <a class="text-lg md:text-2xl bg-white py-2 px-4 mx-8 md:mx-40 lg:mx-72 xl:mx-80 2xl:mx-[30rem] rounded-lg hover:text-[#9BBEC8]" href="{% url 'admin:index' %}">Admin</a>
+                    {% endif %}
+                {% endif %}
+                
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+</body>
+</html>

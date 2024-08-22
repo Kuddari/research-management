@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>หน้าแรก</title>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <div class="relative bg-slate-100 min-h-screen pt-2 md:pt-0 font-minimon">
+        <div>
+            <div>
+                <img class="w-full h-[240px] md:h-[600px]" src="https://burst.shopifycdn.com/photos/macbook-air-on-desk.jpg?width=1000&format=pjpg&exif=0&iptc=0" alt="">
+            </div>
+            <div class="text-xl md:text-4xl translate-x-[5.5%] md:translate-x-[8.5%] lg:translate-x-[21%] -translate-y-[15%] md:-translate-y-[25%] px-4 md:px-12 py-4 text-[#164863] bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] w-[90%] md:w-[85%] lg:w-[70%]  flex flex-col drop-shadow-md shadow">
+                <h1>สารสนเทศงานวิจัยและบริการวิชาการ</h1>
+                <h1>มหาวิทยาลัยฟาฏอนี</h1>    
+
+                <div class="grid md:grid-cols-2 2xl:grid-cols-4 text-[#164863] my-4 gap-4">
+
+                    <div class="flex flex-col border-solid border-2 border-blue-700 rounded-2xl">
+                        <div class="text-center text-lg md:text-3xl text-white py-2 bg-blue-700 rounded-t-2xl">
+                            <h1 class="">฿ งบประมาณรวม</h1>
+                        </div>
+                        <div class="text-center text-2xl md:text-4xl py-6 md:py-12 bg-white rounded-b-2xl h-full">
+                            <h1>{{ total_money_number }}</h1>
+                            <h1>{{ total_money_unit }}บาท</h1>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col border-solid border-2 border-blue-700 rounded-2xl">
+                        <div class="text-center text-lg md:text-3xl text-white py-2 bg-blue-700 rounded-t-2xl">
+                            <h1 class=""><i class="fa-regular fa-newspaper"></i> โครงการวิจัย</h1>
+                        </div>
+                        <div class="text-center text-2xl md:text-4xl py-4 md:py-12 bg-white rounded-b-2xl h-full">
+                            <h1>{{ research_project_count }}</h1>
+                            <h1>โครงการ</h1>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col border-solid border-2 border-blue-700 rounded-2xl">
+                        <div class="text-center text-lg md:text-3xl text-white py-2 bg-blue-700 rounded-t-2xl">
+                            <h1 class=""><i class="fa-regular fa-user"></i> นักวิจัย</h1>
+                        </div>
+                        <div class="text-center text-2xl md:text-4xl py-4 md:py-12 bg-white rounded-b-2xl h-full">
+                            <h1>{{ researcher_count }}</h1>
+                            <h1>ท่าน</h1>
+                        </div>
+                    </div>
+
+                    
+                    
+                    <div class="flex flex-col border-solid border-2 border-blue-700 rounded-2xl">
+                        <div class="text-center text-lg md:text-3xl text-white py-2 bg-blue-700 rounded-t-2xl">
+                            <h1 class=""><i class="fa-solid fa-pager"></i> ผลงานที่เผยแพร่</h1>
+                        </div>
+                        <div class="text-center text-2xl md:text-4xl py-4 md:py-12 bg-white rounded-b-2xl h-full">
+                            <h1>{{ research_count }}</h1>
+                            <h1>งาน</h1>
+                        </div>
+                    </div>
+
+                    <div class="hidden 2xl:flex row-span-2 col-span-2 flex-col border-solid border-2 border-blue-700 rounded-2xl h-full">
+                        <div class="text-center text-lg md:text-3xl text-white py-2 bg-blue-700 rounded-t-2xl">
+                            <h1 class=""><i class="fa-solid fa-chart-column"></i> โครงการวิจัยต่อปี</h1>
+                        </div>
+                        <div class="text-center text-2xl md:text-4xl py-4 md:py-12 rounded-b-2xl bg-white w-full h-full">
+                            <div id="3d-pie-chart" class="h-full w-full"></div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col border-solid border-2 border-blue-700 rounded-2xl">
+                        <div class="text-center text-lg md:text-3xl text-white py-2 bg-blue-700 rounded-t-2xl">
+                            <h1 class=""><i class="fas fa-chalkboard-teacher"></i>  บริการวิชาการ</h1>
+                        </div>
+                        <div class="text-center text-2xl md:text-4xl py-4 md:py-12 bg-white rounded-b-2xl h-full">
+                            <h1>{{ academic_count }}</h1>
+                            <h1>ครั้ง</h1>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col border-solid border-2 border-blue-700 rounded-2xl">
+                        <div class="text-center text-lg md:text-3xl text-white py-2 bg-blue-700 rounded-t-2xl">
+                            <h1 class=""><i class="fa-regular fa-pen-to-square"></i> ผลงานโดดเด่น</h1>
+                        </div>
+                        <div class="text-center text-2xl md:text-4xl py-4 md:py-12 bg-white rounded-b-2xl h-full">
+                            <h1>{{ performance_count }}</h1>
+                            <h1>ผลงาน</h1>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col border-solid border-2 border-blue-700 rounded-2xl">
+                        <div class="text-center text-lg md:text-3xl text-white py-2 bg-blue-700 rounded-t-2xl">
+                            <h1 class=""><i class="far fa-handshake"></i> เครือข่าย MOU</h1>
+                        </div>
+                        <div class="text-center text-2xl md:text-4xl py-4 md:py-12 bg-white rounded-b-2xl h-full">
+                            <h1>{{ Mou_count }}</h1>
+                            <h1>ครั้ง</h1>
+                        </div>
+                    </div>
+
+                    <div class="flex 2xl:hidden row-span-2 col-span-2 flex-col border-solid border-2 border-blue-700 rounded-2xl h-full">
+                        <div class="text-center text-lg md:text-3xl text-white py-2 bg-blue-700 rounded-t-2xl">
+                            <h1 class=""><i class="fa-solid fa-chart-column"></i> โครงการวิจัยต่อปี</h1>
+                        </div>
+                        <div class="text-center text-2xl md:text-4xl py-4 md:py-12 bg-white rounded-b-2xl h-[200px] md:h-[480px] 2xl:h-[540px]">
+                            <div id="3d-pie-chart1" class="h-full w-full"></div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="text-center">
+                    <h1 class="text-xl md:text-3xl">สำนักวิจัยและบริการวิชาการ มหาวิทยาลัยฟาฏอนี</h1>
+                    <h1 class="text-sm md:text-xl">เลขที่ 135/8 หมู่ที่ 3 ตำบลเขาตูม อำเภอยะรัง จังหวัดปัตตานี 94160</h1>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+        <script>
+            google.charts.load("current", { packages: ["corechart"] });
+            google.charts.setOnLoadCallback(drawChart);
+        
+            function drawChart() {
+                // Define the chart data
+                var chartData = [
+                    ['Category', 'Value'],  // Header row
+                    // Data rows
+                    {% for year, count in chart_data.items %}
+                        ['{{ year }}', {{ count }}],
+                    {% endfor %}
+                ];
+        
+                // Convert the chart data to a DataTable
+                var data = google.visualization.arrayToDataTable(chartData);
+        
+                var options = {
+                    is3D: true,
+                    legend: {
+                        position: 'labeled',
+                        alignment: 'center',
+                    },
+                    pieSliceText: 'value',
+                    selectionMode: 'multiple',
+                    seriesType: 'bars',
+                };
+
+                var chartElementId;
+                if (window.matchMedia("(min-width: 1536px)").matches) {
+                    chartElementId = '3d-pie-chart';
+                } else {
+                    chartElementId = '3d-pie-chart1';
+                }
+        
+                // Instantiate and draw the chart, passing in the data and options
+                var chart = new google.visualization.PieChart(document.getElementById(chartElementId));
+                chart.draw(data, options);
+            }
+        </script>
+        
+</body>
+</html>

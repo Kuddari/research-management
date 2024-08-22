@@ -1,0 +1,209 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <title>กรอกข้อมูล MOU</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body">
+    {% include 'navbar.html' %}
+    <div class="relative bg-slate-100 min-h-screen font-minimon text-[#164863]">
+        {% if user.is_authenticated %}
+        <div class="pt-2 md:pt-8 px-4 md:px-12">
+        {% else %}
+        <div class="pt-4 md:pt-16 px-4 md:px-12">
+        {% endif %}
+            <div class="py-2 px-4 mb-4 text-xl md:text-2xl bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow ">
+                <h1>กรอกข้อมูล MOU</h1>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="py-8 md:px-4 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow ">
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="flex flex-col px-8 gap-y-1">
+                            <label for="project" class="text-base md:text-xl">โครงการ<span class="text-red-600"> *</span></label>
+                            {{ form_Mou.project }}
+                        </div>
+
+                        <div class="flex flex-col px-8 gap-y-1">
+                            <label for="faculty" class="text-base md:text-xl">คณะ/หน่วยงานที่รับผิดชอบ<span class="text-red-600"> *</span></label>
+                            {{ form_Mou.faculty }}
+                        </div>
+
+
+                        <div class="flex flex-col px-8 gap-y-1">
+                            <label for="support_type" class="text-base md:text-xl">ประเภทสนับสนุน<span class="text-red-600"> *</span></label>
+                            {{ form_Mou.support_type }}
+                        </div>
+
+                        <div class="flex flex-col px-8 gap-y-1">
+                            <label for="promise_start_date" class="text-base md:text-xl">วันที่ทำความร่วมมือ<span class="text-red-600"> *</span></label>
+                            {{ form_Mou.promise_start_date }}
+                        </div>
+
+                        <div class="flex flex-col px-8 gap-y-1">
+                            <label for="project_start_date" class="text-base md:text-xl">วันที่เริ่มโครงการ<span class="text-red-600"> *</span></label>
+                            {{ form_Mou.project_start_date }}
+                        </div>
+
+                        <div class="flex flex-col px-8 gap-y-1">
+                            <label for="project_end_date" class="text-base md:text-xl">วันที่สิ้นสุดโครงการ<span class="text-red-600"> *</span></label>
+                            {{ form_Mou.project_end_date }}
+                        </div>
+
+                        <div class="flex flex-col px-8 gap-y-1">
+                            <label for="success_level" class="text-base md:text-xl">ระดับความสำเร็จ<span class="text-red-600"> *</span></label>
+                            {{ form_Mou.success_level }}
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-4 my-4">
+                        <div class="flex flex-col px-8 gap-y-1">
+                            <label for="objectives" class="text-base md:text-xl">วัตถุประสงค์</label>
+                            {{ form_Mou.objectives }}
+                        </div>
+
+                        <div class="flex flex-col px-8 gap-y-1">
+                            <label for="goals" class="text-base md:text-xl">เป้าหมาย</label>
+                            {{ form_Mou.goals }}
+                        </div>
+
+                        <div class="flex flex-col px-8 gap-y-1">
+                            <label for="organizations" class="text-base md:text-xl">หน่วยงานที่ร่วมสนับสนุน<span class="text-red-600"> *</span></label>
+                            {{ form_Mou.organizations }}
+                            <button type="button" class="text-green-600 text-3xl" onclick="toggleSupportAgencyForm()">+</button>
+                        </div>
+
+                        <div class="flex flex-col px-8 gap-y-1">
+                            <label for="supporting_activities" class="text-base md:text-xl">กิจกรรมในเครือข่ายสนับสนุน</label>
+                            {{ form_Mou.supporting_activities }}
+                            <button type="button" class="text-green-600 text-3xl" onclick="toggleSupportActivityForm()">+</button>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end py-8">
+                    <button type="submit" name="submitform" class="py-2 px-12 text-xl bg-[#164863] hover:bg-white text-white hover:text-[#164863]  rounded-full drop-shadow-md shadow ">ยืนยัน</button>
+                </div>
+            </form>
+
+            <form method="post">
+                {% csrf_token %}
+                <div id="supportAgencyForm" class="hidden absolute -mt-96 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-8 py-4 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-2xl shadow-md min-h-[200px] min-w-[360px] md:min-w-[400px]">
+                        <div class="flex flex-col px-8 gap-y-1 mt-4">
+                            <label for="organization" class="text-base md:text-xl">หน่วยงาน</label>
+                            {{ form_Support.organization }}
+                        </div>
+            
+                        <div class="flex flex-col px-8 gap-y-1 mt-4">
+                            <label for="signatory" class="text-base md:text-xl">ผู้ลงนาม</label>
+                            {{ form_Support.signatory }}
+                        </div>
+            
+                        <div class="flex flex-col px-8 gap-y-1 mt-4">
+                            <label for="address" class="text-base md:text-xl">ตำบล / อำเภอ / จังหวัด</label>
+                            {{ form_Support.address }}
+                        </div>
+                        <div class="mt-4 flex justify-center text-xl  text-white">
+                            <button type="submit" name="supportAgencyForm" class="rounded-lg bg-[#164863] px-4 py-2">ยืนยัน</button>
+                        </div>
+                </div>
+            </form>
+
+            <form method="post">
+                {% csrf_token %}
+                <div id="supportActivityForm" class="hidden absolute -mt-96 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-8 py-4 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-2xl shadow-md min-h-[200px] min-w-[360px] md:min-w-[400px]">
+                        <div class="flex flex-col px-8 gap-y-1 mt-4">
+                            <label for="organization" class="text-base md:text-xl">กิจกรรม</label>
+                            {{ form_Support_activity.activity }}
+                        </div>
+            
+                        <div class="flex flex-col px-8 gap-y-1 mt-4">
+                            <label for="signatory" class="text-base md:text-xl">เวลาเริ่ม</label>
+                            {{ form_Support_activity.start_time }}
+                        </div>
+            
+                        <div class="flex flex-col px-8 gap-y-1 mt-4">
+                            <label for="address" class="text-base md:text-xl">เวลาสิ้นสุด</label>
+                            {{ form_Support_activity.end_time }}
+                        </div>
+
+                        <div class="flex flex-col px-8 gap-y-1 mt-4">
+                            <label for="address" class="text-base md:text-xl">ระดับความสำเร็จ</label>
+                            {{ form_Support_activity.success_level }}
+                        </div>
+                        <div class="mt-4 flex justify-center text-xl  text-white">
+                            <button type="submit" name="supportActivityForm" class="rounded-lg bg-[#164863] px-4 py-2">ยืนยัน</button>
+                        </div>
+                </div>
+            </form>
+            
+            
+        </div>
+    </div>    
+    <!-- Include flatpickr JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script> <!-- Thai locale -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            flatpickr('[data-input]', {
+                dateFormat: "Y-m-d",
+                locale: "th", // Specify Thai locale
+            });
+        });
+    </script>
+
+<script>
+    // Define toggleSupportAgencyForm in the global scope
+    function toggleSupportAgencyForm() {
+        var supportAgencyForm = document.getElementById('supportAgencyForm');
+        // Toggle the visibility of the supportAgencyForm
+        supportAgencyForm.classList.toggle("hidden");
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        var supportAgencyForm = document.getElementById('supportAgencyForm');
+
+        document.addEventListener("click", function(event) {
+            // If the clicked element is the button, don't hide the form.
+            if (event.target.matches("button") || event.target.matches("input") || supportAgencyForm.contains(event.target)) {
+                return;
+            }
+            // Add the 'hidden' class and hide the form box if clicked outside
+            if (!supportAgencyForm.contains(event.target)) {
+                supportAgencyForm.classList.add("hidden");
+            }
+        });
+    });
+
+    function toggleSupportActivityForm() {
+        var supportActivityForm = document.getElementById('supportActivityForm');
+        // Toggle the visibility of the supportAgencyForm
+        supportActivityForm.classList.toggle("hidden");
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        var supportActivityForm = document.getElementById('supportActivityForm');
+
+        document.addEventListener("click", function(event) {
+            // If the clicked element is the button, don't hide the form.
+            if (event.target.matches("button") || event.target.matches("input") || supportActivityForm.contains(event.target)) {
+                return;
+            }
+            // Add the 'hidden' class and hide the form box if clicked outside
+            if (!supportActivityForm.contains(event.target)) {
+                supportActivityForm.classList.add("hidden");
+            }
+        });
+    });
+</script>
+
+
+
+</body>
+</html>

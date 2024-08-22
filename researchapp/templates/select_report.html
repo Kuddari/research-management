@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 
+    <title>ดูข้อมูลทั่วไป​</title>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <div class="relative bg-slate-100 min-h-screen font-minimon text-[#164863]">
+        <div class="py-12 md:py-16 px-4 md:px-4 xl:px-12">
+            <div class="mx-4 md:mx-12 text-xl md:text-2xl drop-shadow-2xl shadow-sm ">
+                <h1 class="bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] px-4 md:px-12 py-4 rounded-t-lg text-2xl lg:text-4xl">ดูข้อมูลทั่วไป​</h1>
+                <div class="bg-[#9BBEC8] text-center flex flex-col rounded-b-lg text-xl">
+                    <a class="text-lg md:text-2xl bg-white py-2 px-4 mx-4 md:mx-40 lg:mx-72 xl:mx-80 2xl:mx-[30rem] mt-8 rounded-lg hover:text-[#9BBEC8]" href="{% url 'researcher_report' %}">นักวิจัย</a>
+                    <a class="text-lg md:text-2xl bg-white py-2 px-4 mx-4 md:mx-40 lg:mx-72 xl:mx-80 2xl:mx-[30rem] mt-8 rounded-lg hover:text-[#9BBEC8]" href="{% url 'research_project_report' %}">โครงงานวิจัย</a>
+                    <a class="text-lg md:text-2xl bg-white py-2 px-4 mx-4 md:mx-40 lg:mx-72 xl:mx-80 2xl:mx-[30rem] mt-8 rounded-lg hover:text-[#9BBEC8]" href="{% url 'research_report' %}">เผยแพร่ผลงาน</a>
+                    <a class="text-lg md:text-2xl bg-white py-2 px-4 mx-4 md:mx-40 lg:mx-72 xl:mx-80 2xl:mx-[30rem] mt-8 rounded-lg hover:text-[#9BBEC8]" href="{% url 'academic_report' %}">บริการวิชาการ</a>
+                    <a class="text-lg md:text-2xl bg-white py-2 px-4 mx-4 md:mx-40 lg:mx-72 xl:mx-80 2xl:mx-[30rem] mt-8 rounded-lg hover:text-[#9BBEC8]" href="{% url 'performance_report' %}">ผลงานโดดเด่น</a>
+                    <a class="text-lg md:text-2xl bg-white py-2 px-4 mx-4 md:mx-40 lg:mx-72 xl:mx-80 2xl:mx-[30rem] mt-8 rounded-lg mb-12 hover:text-[#9BBEC8]" href="{% url 'mou_report' %}">เครือข่าย MOU</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+</body>
+</html>

@@ -1,0 +1,96 @@
+{% load static %}
+{% load static tailwind_tags %}
+{% tailwind_css %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" />
+    <link rel="stylesheet" href="{% static 'css/font.css' %}">
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</head>
+<body>
+    <header class="relative font-minimon z-10">
+        {% if user.is_authenticated %}
+        <div class="bg-[#164863] flex flex-row py-1 px-3 md:px-12 drop-shadow-lg shadow-md">
+            <div class="flex flex-row justify-between text-sm md:text-2xl text-white w-full">
+                <div class="flex flex-row">
+                    <div class="w-12 h-12 md:w-16 md:h-16">
+                        <a href="{% url 'home' %}"><img src="{% static 'images/logo.png' %}" alt="Logo"></a>
+                    </div>
+                    <div class="ml-2 md:ml-8 mt-2 md:mt-0.5">
+                        <h1>สารสนเทศงานวิจัยและบริการวิชาการ</h1>
+                        <h1 class="-mt-1">มหาวิทยาลัยฟาฏอนี</h1>
+                    </div>
+                </div>
+                <!-- Menu button at the bottom right of the container -->
+                <div class="self-end md:self-center md:mt-0">
+                    <button id="toggleButton" class="lg:hidden text-sm bg-gray-800 text-white px-2 md:text-lg mb-1.5 md:mb-0 md:px-4 py-2">
+                        Menu
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Menu container with right alignment for the <ul> -->
+            <div class="absolute hidden right-0 w-30 md:w-48 lg:w-full top-full lg:flex justify-end lg:static" id="menuContainer">                
+                <ul class="block lg:flex md:-mt-0.5 gap-12 justify-end bg-[#427D9D] lg:bg-transparent text-white text-sm md:text-xl lg:my-4" id="menuList">
+                    <li class="py-4 px-4 lg:px-0 lg:py-0 border-solid border-b-2 border-gray-200 hover:text-gray-300 lg:border-none md:mt-0.5"><a href="{% url 'profile' id=request.user.researcher_profile.id %}">ข้อมูลนักวิจัย</a></li>
+                    <li class="py-4 px-4 lg:px-0 lg:py-0 border-solid border-b-2 border-gray-200 hover:text-gray-300 lg:border-none md:mt-0.5"><a href="{% url 'select' %}">กรอกข้อมูล</a></li>
+                    <li class="py-4 px-4 lg:px-0 lg:py-0 border-solid border-b-2 border-gray-200 hover:text-gray-300 lg:border-none md:mt-0.5"><a href="{% url 'select_report' %}">ดูข้อมูลทั่วไป​</a></li>
+                    <li class="py-4 px-4 lg:px-0 lg:py-0 hover:text-gray-300 lg:border-none md:mt-0.5"><a href="{% url 'logout' %}">ออกจากระบบ</a></li>
+                </ul>
+            </div>
+           
+        </div>
+        
+        
+        {% else %}
+        
+        <div class="bg-[#164863] flex flex-row py-1 px-3 md:px-12 drop-shadow-lg shadow-md">
+            <div class="w-12 h-12 md:w-16 md:h-16 mt-1.5">
+                <a href="{% url 'home' %}"><img src="{% static 'images/logo.png' %}" alt=""></a>
+            </div>
+            <!-- Updated this div to include 'justify-between' -->
+            <div class="flex justify-between ml-2 md:ml-8 mt-2 md:mt-0.5 text-sm md:text-2xl text-white w-full">
+                <div>
+                    <h1>สารสนเทศงานวิจัยและบริการวิชาการ</h1>
+                    <h1 class="-mt-0.5">มหาวิทยาลัยฟาฏอนี</h1>
+                </div>
+                <div>
+                    <button id="toggleButton" class="lg:hidden text-sm bg-gray-800 text-white px-2 md:text-lg md:px-4 py-2 md:mt-2.5">
+                        Menu
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        
+        <div class="flex justify-end">
+            <div class="absolute w-32 md:w-48 md:-mt-0.5 lg:-mt-0 lg:w-full justify-end lg:flex lg:justify-end hidden" id="menuContainer">                
+                <ul class="block lg:flex lg:px-4 lg:w-8/12 lg:justify-between bg-[#427D9D] text-white text-sm md:text-xl lg:text-lg drop-shadow-lg shadow-md" id="menuList">  
+                    <li class="py-4 px-4 lg:px-0 lg:py-0 border-solid border-b-2 border-gray-200 hover:text-gray-300 lg:border-none md:mt-0.5"><a href="{% url 'home' %}">หน้าแรก</a></li>
+                    <li class="py-4 px-4 lg:px-0 lg:py-0 border-solid border-b-2 border-gray-200 hover:text-gray-300 lg:border-none md:mt-0.5"><a href="{% url 'researcher_report' %}">นักวิจัย</a></li>
+                    <li class="py-4 px-4 lg:px-0 lg:py-0 border-solid border-b-2 border-gray-200 hover:text-gray-300 lg:border-none md:mt-0.5"><a href="{% url 'research_project_report' %}">โครงงานวิจัย</a></li>
+                    <li class="py-4 px-4 lg:px-0 lg:py-0 border-solid border-b-2 border-gray-200 hover:text-gray-300 lg:border-none md:mt-0.5"><a href="{% url 'research_report' %}">เผยแพร่ผลงาน</a></li>
+                    <li class="py-4 px-4 lg:px-0 lg:py-0 border-solid border-b-2 border-gray-200 hover:text-gray-300 lg:border-none md:mt-0.5"><a href="{% url 'academic_report' %}">บริการวิชาการ</a></li>
+                    <li class="py-4 px-4 lg:px-0 lg:py-0 border-solid border-b-2 border-gray-200 hover:text-gray-300 lg:border-none md:mt-0.5"><a href="{% url 'performance_report' %}">ผลงานโดดเด่น</a></li>
+                    <li class="py-4 px-4 lg:px-0 lg:py-0 border-solid border-b-2 border-gray-200 hover:text-gray-300 lg:border-none md:mt-0.5"><a href="{% url 'mou_report' %}">เครือข่าย MOU</a></li>
+                    <li class="py-4 px-4 lg:px-0 lg:py-0 hover:text-gray-300 lg:border-none md:mt-0.5"><a href="{% url 'login' %}">เข้าสู่ระบบ</a></li>
+                    
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+
+    </header>
+    <script src="{% static 'js/scripts.js' %}"></script>
+</body>
+</html>

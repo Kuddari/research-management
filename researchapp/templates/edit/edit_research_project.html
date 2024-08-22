@@ -1,0 +1,470 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <title>โครงงานวิจัย "{{research_project.research_nameTH}}"</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body">
+    {% include 'navbar.html' %}
+    <div class="relative  min-h-screen  font-minimon text-[#164863]">
+        {% if user.is_authenticated %}
+        <div class="pt-2 md:pt-8 px-4 md:px-12">
+        {% else %}
+        <div class="pt-4 md:pt-16 px-4 md:px-12">
+        {% endif %}
+            <div class="py-2 px-4 mb-4 text-xl md:text-2xl bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow ">
+                <h1>แก้ไขข้อมูลโครงการวิจัย "{{research_project.research_nameTH}}"</h1></h1>
+            </div>
+
+        <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="py-8 md:px-4 grid md:grid-cols-2 gap-4 text-3xl bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow ">
+                    <div class="flex flex-col px-8 gap-y-1">
+                        <label for="research_code" class="text-base md:text-xl">รหัสโครงการวิจัย <span class="text-red-600"> *</span></label>
+                        <input type="text" name="research_code" placeholder="รหัสโครงการวิจัย" value="{{research_project.research_code}}" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                    </div>
+
+                    <div class="flex flex-col px-8 gap-y-1">
+                        <label for="research_nameTH" class="text-base md:text-xl">ชื่อโครงการวิจัย (TH)<span class="text-red-600"> *</span></label>
+                        <input type="text" name="research_nameTH" placeholder="Research project name (TH)" value="{{research_project.research_nameTH}}" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                    </div>
+
+                    <div class="flex flex-col px-8 gap-y-1">
+                        <label for="research_nameEN" class="text-base md:text-xl">ชื่อโครงการวิจัย (EN)</label>
+                        <input type="text" name="research_nameEN" placeholder="Research project name (EN)" value="{{research_project.research_nameEN}}" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                    </div>
+
+                    <div class="flex flex-col px-8 gap-y-1">
+                        <label for="faculty" class="text-base md:text-xl">หน่วยงาน / คณะ <span class="text-red-600"> *</span></label>
+                        <select name="faculty" id="faculty" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                            <option value="{{research_project.faculty.name}}">{{research_project.faculty}}</option>
+                            {% for faculty in faculties %}
+                            <option value="{{ faculty.id }}">{{ faculty.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="flex flex-col px-8 gap-y-1">
+                        <label for="department" class="text-base md:text-xl">ฝ่ายงาน / สาขา<span class="text-red-600"> *</span></label>
+                        <select name="department" id="department" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                            <option value="{{research_project.department.name}}">{{research_project.department.name}}</option>
+                        </select>
+                    </div>
+
+
+                    <div class="flex flex-col px-8 gap-y-1">
+                        <label for="inside_outside" class="text-base md:text-xl">ภายใน / ภายนอก<span class="text-red-600"> *</span></label>
+                        <select type="text" name="inside_outside" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                            <option value="{{research_project.inside_outside}}">{{research_project.inside_outside}}</option>
+                            {% for choice in inside_outside_choices %}
+                            <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="flex flex-col px-8 gap-y-1">
+                        <label for="research_type" class="text-base md:text-xl">ประเภทวิจัย<span class="text-red-600"> *</span></label>
+                        <select type="text" name="research_type" placeholder="ประเภทวิจัย" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                            <option value="{{research_project.research_type}}">{{research_project.research_type}}</option>
+                            {% for choice in research_type_choices %}
+                            <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="flex flex-col px-8 gap-y-1">
+                        <label for="strategic" class="text-base md:text-xl">ยุทธศาสตร์<span class="text-red-600"> *</span></label>
+                        <select type="text" name="strategic" placeholder="" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none" required>
+                            <option value="{{research_project.strategic_choice.name}}">{{research_project.strategic_choice}}</option>
+                            {% for strategic_choice in strategic_choices %}
+                            <option value="{{ strategic_choice.name }}"  {% if strategic_choice.name|stringformat:"s" == form_data.strategic %} selected {% endif %}>{{ strategic_choice.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="flex flex-col px-8 gap-y-1">
+                        <label for="status" class="text-base md:text-xl">สถานะโครงการวิจัย<span class="text-red-600"> *</span></label>
+                        <select type="text" name="status" placeholder="" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                            <option value="{{research_project.status}}">{{research_project.status}}</option>
+                            {% for choice in status_choices %}
+                            <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+
+                    <div class="flex flex-col px-8 gap-y-1">
+                        <label for="file" class="text-base md:text-xl">ไฟล์<span class="text-red-600"> *</span></label>
+                        <div class="flex flex-col text-base">
+                            <label for="fileInput" class="cursor-pointer">
+                                {% if research_project.file %}
+                                    <!-- If the file exists, display the file name -->
+                                    <div id="fileLabel" class="py-2 px-4 rounded-lg bg-white border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                                        {{ research_project.file.name }}
+                                    </div>
+                                {% else %}
+                                    <!-- If the file does not exist, show a message to upload a file -->
+                                    <div id="fileLabel" class="py-2 px-4 rounded-lg bg-white border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                                        อัพโหลดไฟล์
+                                    </div>
+                                {% endif %}
+                            </label>
+                            <input type="file" name="fileInput" id="fileInput" class="hidden" accept="application/pdf" data-focusable="true" onchange="updateFileLabel(this, 'fileLabel')">
+                        </div>                    
+                    </div>
+
+                    <div class="flex flex-col px-8 gap-y-1">
+                        <label for="date" class="text-base md:text-xl">วันที่ทำสัญญา</label>
+                        <input id="date" name="date" autocomplete="nope" placeholder="วันที่ทำสัญญา" value="{{research_project.date_promise}}" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                    </div>
+            </div>
+
+            <div class="py-2 px-4 mb-4 my-4 text-lg text-center md:text-xl bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow ">
+                <h1>ข้อมูลนักวิจัย</h1>
+            </div>
+            
+            <div id="addpeople_inside" class="py-8 md:px-4 grid md:grid-cols-2 gap-4 text-3xl bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow ">
+                {% for researcher in current_internal_researchers %}
+                <div class="flex flex-col px-8 gap-y-1">
+                    <label for="name_inside" class="text-base md:text-xl">ชื่อนักวิจัย<span class="text-red-600"> *</span></label>
+                    <select type="text" name="name_inside" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                        <option value="{{ researcher.id }}">{{ researcher.name.name_lastname_th }}</option>
+                        {% for researcher in researchers %}
+                        <option value="{{researcher.id}}">{{researcher.name_lastname_th}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="flex flex-col px-8 gap-y-1">
+                    <label for="position_inside" class="text-base md:text-xl">เลือกตำแหน่ง<span class="text-red-600"> *</span></label>
+                    <select type="text" name="position_inside" placeholder="" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                        <option value="{{ researcher.research_position }}">{{ researcher.research_position }}</option>
+                        {% for choice in internal_research_position_choices %}
+                        <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endfor %}
+
+            </div>
+
+            <div class="flex flex-row justify-center gap-3">
+                <div class="flex justify-center text-center">
+                    <button type="button" onclick="addResearcherinside()" class="bg-[#002D57] py-2 w-36 md:w-52 text-white mt-4 rounded-full">เพิ่มนักวิจัย</button>
+                </div>
+                <div class="flex justify-center text-center">
+                    <button type="button" onclick="deleteResearcherinside()" class="bg-red-500 py-2 w-36 md:w-52 text-white mt-4 rounded-full">ลบนักวิจัย</button>
+                </div>
+                
+            </div>
+            
+
+            <div class="py-2 px-4 mb-4 my-4 text-lg text-center md:text-xl bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow ">
+                <h1>ข้อมูลนักวิจัย (ภายนอก)</h1>
+            </div>
+            
+            <div id="addpeople_outside" class="py-8 md:px-4 grid md:grid-cols-2 gap-4 text-3xl bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow ">
+                {% for researcher in current_external_researchers %}
+                <div class="flex flex-col px-8 gap-y-1">
+                    <label for="name_outside" class="text-base md:text-xl">ชื่อนักวิจัย<span class="text-red-600"> *</span></label>
+                    <input type="text" name="name_outside" placeholder="ชื่อนักวิจัย" value="{{researcher.name}}" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                </div>
+                <div class="flex flex-col px-8 gap-y-1">
+                    <label for="position_inside" class="text-base md:text-xl">เลือกตำแหน่ง<span class="text-red-600"> *</span></label>
+                    <select type="text" name="position_outside" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                        <option value="{{researcher.research_position}}">{{researcher.research_position}}</option>
+                        {% for choice in external_research_position_choices %}
+                        <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endfor %}
+            </div>
+            
+
+            <div class="flex flex-row justify-center gap-3">
+                <div class="flex justify-center text-center">
+                    <button type="button" onclick="addResearcheroutside()" class="bg-[#002D57] py-2 w-36 md:w-52 text-white mt-4 rounded-full">เพิ่มนักวิจัย</button>
+                </div>
+                <div class="flex justify-center text-center">
+                    <button type="button" onclick="deleteResearcheroutside()" class="bg-red-500 py-2 w-36 md:w-52 text-white mt-4 rounded-full">ลบนักวิจัย</button>
+                </div>
+                
+            </div>
+
+            <div class="py-2 px-4 mb-4 my-4 text-lg text-center md:text-xl bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow ">
+                <h1>ด้านงบประมาณ</h1>
+            </div>
+            
+            <div class="py-8 md:px-4 grid md:grid-cols-2 gap-4 text-3xl bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow ">
+                <div class="flex flex-col gap-2 mx-8 py-2 text-base md:text-xl">
+                    <label for="Fund">แหล่งเงินทุน</label>
+                    <div class="flex flex-col bg-white overflow-y-auto hide-scrollbar rounded min-h-[130px] max-h-[130px]">
+                        {% for fund in fund %}
+                        <div class="flex flex-row px-2 py-1 justify-between">
+                                <input class="mr-2 mt-1.5" type="checkbox" id="{{fund.id}}" name="fund" value="{{fund.id}}" {% if fund in research_project.fund.all %} checked {% endif %}>
+                                
+                                <label class="text-md" for="{{ fund.id }}">{{ fund.fund_from }}</label>
+                                <button type="button" onclick="confirmDeletefund('{{ fund.id }}', '{{ fund.fund_from }}')" class="delete-tag-button ml-auto font-bold">X</button>
+                            </div>
+                        {% endfor %}
+                        <button type="button" id="toggleButtonFund" class="text-4xl">&plus;</button>
+                    </div>
+                </div>
+
+                <div id="addFundBox" class="hidden absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-8 py-4 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-2xl shadow-md min-h-[200px] min-w-[320px]">
+                        <div class="flex flex-col gap-4">
+                            <label for="addfund" class="text-base md:text-xl">เพิ่มแหล่งเงินทุน</label>
+                            <input type="text" name="addfund" placeholder="แหล่งเงินทุน" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                        </div>
+                        <div class="mt-4 flex justify-center text-xl  text-white">
+                            <button type="submit" name="btnaddfund" class="rounded-lg bg-[#164863] hover:bg-blue-500 px-4 py-2">ยืนยัน</button>
+                        </div>
+                </div>
+
+                <div class="flex flex-col gap-2 mx-8 py-2 text-base md:text-xl">
+                    <label for="agency.agency_from">หน่วยงานสนับสนุน</label>
+                    <div class="flex flex-col bg-white overflow-y-auto hide-scrollbar rounded min-h-[130px] max-h-[130px]">
+                        {% for agency in agency %}
+                        <div class="flex flex-row px-2 py-1 justify-between">
+                            <input class="mr-2 mt-1.5" type="checkbox" id="{{ agency.id }}" name="agency" value="{{ agency.id }}" {% if agency in research_project.agency.all %} checked {% endif %}>
+                            <label class="text-md" for="{{ agency.id }}">{{ agency.agency_from }}</label>
+                            <button type="button" onclick="confirmDeleteagency('{{ agency.id }}', '{{ agency.agency_from }}')" class="delete-tag-button ml-auto font-bold">X</button>
+                        </div>
+                        {% endfor %}
+                        <button type="button" id="toggleButtonAgency" class="text-4xl">&plus;</button>
+                    </div>
+                </div>
+                
+
+                <div id="addAgencyBox" class="hidden absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-8 py-4 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-2xl shadow-md min-h-[200px] min-w-[320px]">
+                        <div class="flex flex-col gap-4">
+                            <label for="addagency" class="text-base md:text-xl">เพิ่มหน่วยงานสนับสนุน</label>
+                            <input type="text" name="addagency" placeholder="หน่วยงานสนับสนุน" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                        </div>
+                        <div class="mt-4 flex justify-center text-xl  text-white">
+                            <button type="submit" name="btnaddagency" class="rounded-lg bg-[#164863] hover:bg-blue-500 px-4 py-2">ยืนยัน</button>
+                        </div>
+                </div>
+                                
+
+                <div class="flex flex-col px-8 gap-y-1">
+                    <label for="money" class="text-base md:text-xl">จำนวน<span class="text-red-600"> *</span></label>
+                    <input type="text" name="money" placeholder="0" value="{{research_project.money}}" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                </div>
+
+            </div>
+            <div class="flex justify-end py-8">
+                <button type="submit" name="btn" class="py-2 px-12 text-xl bg-[#164863] hover:bg-white hover:text-[#164863] text-white rounded-full drop-shadow-md shadow ">ยืนยัน</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+    <script src="{% static 'js/javascripts.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script> <!-- Thai locale -->
+
+    <script>
+    // Initialize flatpickr for startDate and endDate inputs
+    flatpickr("#date", {
+        dateFormat: "d-m-Y",
+        locale: "th", // Specify Thai locale
+        onChange: function(selectedDates, dateStr, instance) {
+        // Set minDate of endDate picker to startDate value
+        instance.config.maxDate = document.getElementById("endDate").value;
+        }
+    });
+
+    </script>
+
+    <script>
+        // Function to check if the clicked element is inside the specified container
+        function isClickedInsideElement(element, container) {
+            return container.contains(element);
+        }
+    
+        // Event listener for clicks on the document body
+        document.body.addEventListener("click", function(event) {
+            var addFundBox = document.getElementById("addFundBox");
+            var toggleButtonFund = document.getElementById("toggleButtonFund");
+            var addAgencyBox = document.getElementById("addAgencyBox");
+            var toggleButtonAgency = document.getElementById("toggleButtonAgency");
+    
+            // Check if the clicked element is not inside the addFundBox, toggleButtonFund, addAgencyBox, or toggleButtonAgency
+            if (!isClickedInsideElement(event.target, addFundBox) && !isClickedInsideElement(event.target, toggleButtonFund) && !isClickedInsideElement(event.target, addAgencyBox) && !isClickedInsideElement(event.target, toggleButtonAgency)) {
+                // Hide the addFundBox and addAgencyBox
+                addFundBox.classList.add("hidden");
+                addAgencyBox.classList.add("hidden");
+            }
+        });
+    
+        // Event listener for clicks on the toggleButtonBox for Fund
+        document.getElementById("toggleButtonFund").addEventListener("click", function() {
+            var box = document.getElementById("addFundBox");
+            if (box.classList.contains("hidden")) {
+                box.classList.remove("hidden");
+            } else {
+                box.classList.add("hidden");
+            }
+        });
+    
+        // Event listener for clicks on the toggleButtonBox for Agency
+        document.getElementById("toggleButtonAgency").addEventListener("click", function() {
+            var box = document.getElementById("addAgencyBox");
+            if (box.classList.contains("hidden")) {
+                box.classList.remove("hidden");
+            } else {
+                box.classList.add("hidden");
+            }
+        });
+    </script>
+    
+    
+
+    
+    <script>
+        function addResearcherinside() {
+        // Container where new fields will be added
+        var container = document.getElementById('addpeople_inside');
+
+        // Create new researcher name field
+        var researcherNameDiv = document.createElement('div');
+        researcherNameDiv.className = 'flex flex-col px-8 gap-y-1';
+        researcherNameDiv.innerHTML = `
+            <label for="name_inside" class="text-base md:text-xl">ชื่อนักวิจัย<span class="text-red-600"> *</span></label>
+            <select name="name_inside" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                <option value="">เลือกนักวิจัย</option>
+                {% for researcher in researchers %}
+                    <option value="{{researcher.id}}">{{researcher.name_lastname_th}}</option>
+                {% endfor %}
+            </select>
+        `;
+
+        // Create new researcher position field
+        var researcherPositionDiv = document.createElement('div');
+        researcherPositionDiv.className = 'flex flex-col px-8 gap-y-1';
+        researcherPositionDiv.innerHTML = `
+            <label for="position_inside" class="text-base md:text-xl">เลือกตำแหน่ง<span class="text-red-600"> *</span></label>
+            <select name="position_inside" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                <option value="">เลือกตำแหน่ง</option>
+                {% for choice in internal_research_position_choices %}
+                <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                {% endfor %}
+            </select>
+        `;
+
+        // Append new fields to the container
+        container.appendChild(researcherNameDiv);
+        container.appendChild(researcherPositionDiv);
+    }
+
+
+
+        function addResearcheroutside() {
+            // Container where new fields will be added
+            var container = document.getElementById('addpeople_outside');
+
+            // Create new researcher name field
+            var researcherNameDiv = document.createElement('div');
+            researcherNameDiv.className = 'flex flex-col px-8 gap-y-1';
+            researcherNameDiv.innerHTML = `
+                <label for="name_outside" class="text-base md:text-xl">ชื่อนักวิจัย<span class="text-red-600"> *</span></label>
+                <input type="text" name="name_outside" placeholder="ชื่อนักวิจัย" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+            `;
+
+            // Create new researcher position field
+            var researcherPositionDiv = document.createElement('div');
+            researcherPositionDiv.className = 'flex flex-col px-8 gap-y-1';
+            researcherPositionDiv.innerHTML = `
+                <label for="position_outside" class="text-base md:text-xl">เลือกตำแหน่ง<span class="text-red-600"> *</span></label>
+                <select name="position_outside" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none">
+                    <option value="">เลือกตำแหน่ง</option>
+                    <option value="นักวิจัยหลัก">นักวิจัยหลัก</option>
+                    <option value="นักวิจัยรอง">นักวิจัยรอง</option>
+                </select>
+            `;
+            // Append new fields to the container
+            container.appendChild(researcherNameDiv);
+            container.appendChild(researcherPositionDiv);
+        }
+
+        function deleteResearcherinside() {
+            // Container where new fields will be added
+            var container = document.getElementById('addpeople_inside');
+            // Remove the last researcher name field
+            var lastResearcherName = container.querySelector('div:nth-last-child(2)');
+            if (lastResearcherName) {
+                container.removeChild(lastResearcherName);
+            }
+            // Remove the last researcher position field
+            var lastResearcherPosition = container.querySelector('div:last-child');
+            if (lastResearcherPosition) {
+                container.removeChild(lastResearcherPosition);
+            }
+        }
+
+
+
+        function deleteResearcheroutside() {
+            // Container where new fields will be added
+            var container = document.getElementById('addpeople_outside');
+            // Remove the last researcher name field
+            var lastResearcherName = container.querySelector('div:nth-last-child(2)');
+            if (lastResearcherName) {
+                container.removeChild(lastResearcherName);
+            }
+            // Remove the last researcher position field
+            var lastResearcherPosition = container.querySelector('div:last-child');
+            if (lastResearcherPosition) {
+                container.removeChild(lastResearcherPosition);
+            }
+        }
+        
+    </script>
+
+    <script>
+        function confirmDeletefund(id) {
+            if (confirm("Are you sure you want to delete this fund?")) {
+                fetch(`/delete_fund/${id}/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.reload(); // Reload the page after successful deletion
+                    } else {
+                        // Optionally, handle error response
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        }
+
+        function confirmDeleteagency(id, name) {
+            if (confirm(`Are you sure you want to delete ${name}?`)) {
+                fetch(`/delete_agency/${id}/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.reload(); // Reload the page after successful deletion
+                    } else {
+                        // Optionally, handle error response
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 
+    <title>รายละเอียดโครงการบริการวิชาการ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <div class="relative  pb-12 min-h-screen font-minimon text-[#164863]">
+        <div class="pt-4 md:pt-8 px-4 md:px-20">
+            <div class="py-2 px-4 my-4 text-xl md:text-2xl bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow">
+                <h1>ข้อมูลโครงการบริการวิชาการ | รายละเอียดโคงการบริการวิชาการ</h1>
+            </div>
+
+            <div class="grid md:grid-cols-2 px-4 md:px-14 gap-y-6 gap-x-20">
+                <div class="flex flex-col gap-y-1">
+                    <label class="text-xl" for="">ชื่อผลงาน (TH)</label>
+                    <h1 class="text-lg py-1 px-4 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-sm drop-shadow-md shadow">{{academic.workTH}}</h1>   
+                </div>
+
+                <div class="flex flex-col gap-y-1">
+                    <label class="text-xl" for="">ชื่อผลงาน (EN)</label>
+                    <h1 class="text-lg py-1 px-4 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-sm drop-shadow-md shadow">{{academic.workEN}}</h1>   
+                </div>
+
+                <div class="flex flex-col gap-y-1">
+                    <label class="text-xl" for="">ปีการศึกษา</label>
+                    <h1 class="text-lg py-1 px-4 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-sm drop-shadow-md shadow">{{academic.year}}</h1>   
+                </div>
+
+                <div class="flex flex-col gap-y-1">
+                    <label class="text-xl" for="">วันเดือนปีเริ่ม - สิ้นสุด</label>
+                    <h1 class="text-lg py-1 px-4 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-sm drop-shadow-md shadow">{{academic.startDate}} - {{academic.endDate}}</h1>   
+                </div>
+
+                <div class="flex flex-col gap-y-1">
+                    <label class="text-xl" for="">ประเภทโครการ</label>
+                    <h1 class="text-lg py-1 px-4 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-sm drop-shadow-md shadow">{{academic.work_type}}</h1>   
+                </div>
+
+                <div class="flex flex-col gap-y-1">
+                    <label class="text-xl" for="">ประเภทบูรณาการ</label>
+                    <h1 class="text-lg py-1 px-4 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-sm drop-shadow-md shadow">{{academic.integration}}</h1>   
+                </div>
+
+                <div class="flex flex-col gap-y-1">
+                    <label class="text-xl" for="">คณะ</label>
+                    <h1 class="text-lg py-1 px-4 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-sm drop-shadow-md shadow">{{academic.faculty}}</h1>   
+                </div>
+
+                <div class="flex flex-col gap-y-1">
+                    <label class="text-xl" for="">สาขา</label>
+                    <h1 class="text-lg py-1 px-4 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-sm drop-shadow-md shadow">{{academic.department}}</h1>   
+                </div>
+
+                <div class="flex flex-col gap-y-1">
+                    <label class="text-xl" for="">ที่อยู่</label>
+                    <h1 class="text-lg py-1 px-4 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-sm drop-shadow-md shadow">{{academic.address}}, {{academic.subdistrict}}, {{academic.district}}, {{academic.province}}</h1>   
+                </div>
+
+                <div class="flex flex-col gap-y-1">
+                    <label class="text-xl" for="">ข้อมูลนำไปใช้ผลประโยชน์</label>
+                    <h1 class="text-lg py-1 px-4 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-sm drop-shadow-md shadow">{{academic.information}}</h1>   
+                </div>
+
+            </div>
+
+            
+            <div class="py-2 px-4 mt-12 mb-4 text-xl md:text-2xl bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow">
+                <h1>ด้านการเงิน</h1>
+            </div>
+
+            <div class="grid md:grid-cols-2 px-4 md:px-14 gap-y-6 gap-x-20">
+                <div class="flex flex-col gap-y-1">
+                    <label class="text-xl" for="">แหล่งเงินทุน</label>
+                    {% for fund in academic.fund.all %}
+                        <h1 class="text-lg my-1.5 py-1 px-4 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-sm drop-shadow-md shadow">
+                            {{ fund.fund_from }} <!-- Assuming 'name' is the attribute you want to display -->
+                        </h1>
+                    {% empty %}
+                        <h1 class="text-lg my-1.5 py-1 px-4 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-sm drop-shadow-md shadow">
+                            -
+                        </h1>
+                    {% endfor %}
+                </div>
+                
+
+                <div class="flex flex-col gap-y-1">
+                    <label class="text-xl" for="">หน่วยงานสนับสนุน</label>
+                    {% for agency in academic.agency.all %}
+                        <h1 class="text-lg my-1.5 py-1 px-4 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-sm drop-shadow-md shadow">
+                            {{ agency.agency_from }} <!-- Assuming 'name' is the attribute you want to display -->
+                        </h1>
+                    {% empty %}
+                        <h1 class="text-lg my-1.5 py-1 px-4 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-sm drop-shadow-md shadow">
+                            -
+                        </h1>
+                    {% endfor %}
+                </div>
+                
+            </div>
+
+            <div class="py-2 px-4 mt-12 mb-4 text-xl md:text-2xl bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow">
+                <h1>ร่วมบริการวิชาการ</h1>
+            </div>
+
+            <!-- Organizing Agency -->
+            <div class="grid md:grid-cols-2 px-4 md:px-14 gap-y-6 gap-x-20">
+                <div class="flex flex-col text-lg my-1.5 py-1 px-4 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-sm drop-shadow-md shadow">
+                    {% if organizing_agency_lines %}
+                        {% for line in organizing_agency_lines %}
+                            <h1>{{ line }}</h1>
+                        {% endfor %}
+                    {% else %}
+                        <h1>-</h1>
+                    {% endif %}
+                </div>
+                <div class="flex flex-col text-lg my-1.5 py-1 px-4 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-sm drop-shadow-md shadow">
+                    {% if partner_organize_lines %}
+                        {% for line in partner_organize_lines %}
+                            <h1>{{ line }}</h1>
+                        {% endfor %}
+                    {% else %}
+                        <h1>-</h1>
+                    {% endif %}
+                </div>
+            </div>
+        
+            <div class="py-2 px-4 mt-12 mb-4 text-xl md:text-2xl bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow">
+                <h1>ข้อมูลนักวิจัย</h1>
+            </div>
+    
+            <div class="py-2 px-2 md:px-4 flex flex-row items-center w-full text-sm md:text-lg bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] rounded-lg drop-shadow-md shadow mt-4 mb-3">
+                <h1 class="w-1/12 text-center">ลำดับ</h1>
+                <h1 class="w-1/3 text-center">ชื่อ-นามสกุล</h1>
+                <h1 class="w-1/3 text-center">ตำแหน่ง</h1>
+            </div>
+    
+            
+            {% for item in combined_researchers %}
+            <div class="mt-2 py-2 px-2 md:px-4 flex flex-row items-center w-full text-sm md:text-lg bg-slate-100 rounded-lg drop-shadow-md shadow my-4">
+                <h1 class="w-1/12 text-center">{{ forloop.counter }}</h1>
+                <!-- Check the type to decide which name attribute to display -->
+                <h1 class="w-1/3 text-center">
+                    {% if item.type == 'internal' %}
+                        {{ item.researcher.name.name_lastname_th }}
+                    {% else %}
+                        {{ item.researcher.name }}
+                    {% endif %}
+                </h1>
+                <h1 class="w-1/3 text-center">{{ item.researcher.research_position }}</h1>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+
+
+</body>
+</html>

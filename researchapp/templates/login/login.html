@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 
+    <title>ล็อคอิน</title>
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+    <div class="relative min-h-screen bg-slate-100 font-minimon">
+        {% if user.is_authenticated %}
+        <div class="pt-2 md:pt-8 px-4 md:px-12">
+        {% else %}
+        <div class="pt-4 md:pt-16 px-4 md:px-12">
+        {% endif %}
+            <div class="grid grid-cols-1 md:grid-cols-2">
+                <div>
+                    <img class="w-full h-[200px] md:h-[350] lg:h-[480px]" src="https://burst.shopifycdn.com/photos/macbook-air-on-desk.jpg?width=1000&format=pjpg&exif=0&iptc=0" alt="">
+                </div>
+                <div class="flex justify-center">
+                    <div class="mt-8 lg:mt-16">
+                        <div class="text-[#164863] my-4">
+                            <h1 class="text-2xl">ยินดีต้อนรับ</h1>
+                            <p class="text-xl">เข้าสู่ระบบ</p>
+                        </div>
+                            <form method="POST">
+                                {% csrf_token %}
+                               <div class="flex flex-col gap-y-4">
+                                    <div class="relative">
+                                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center">
+                                            <i class="fa-solid fa-user"></i>
+                                        </span>
+                                        <input type="text" name="username" value="{{form_data.username}}" placeholder="ชื่อผู้ใช้" class="w-60 pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none" required>
+                                    </div>
+                                
+                                    <div class="relative">
+                                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center">
+                                            <i class="fa-solid fa-lock"></i>
+                                        </span>
+                                        <input type="password" name="password" placeholder="รหัสผ่าน" class="w-60 pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none" required>
+                                    </div>
+                                    <div class=" -mt-2 text-lg text-[#164863] text-right">
+                                        <a class="hover:text-blue-500" href="{% url 'password_reset' %}">ลืมรหัสผ่าน</a>
+                                    </div>
+                                    {% if messages %}
+                                        <ul class="text-red-500 messages text-center text-lg">
+                                            {% for message in messages %}
+                                                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                    <div>
+                                        <button type="submit" class="bg-[#164863] hover:bg-white hover:text-[#164863] rounded-lg py-2 px-2 text-center text-white w-60 drop-shadow-md shadow ">เข้าสู่ระบบ</button>
+                                    </div>
+                               </div>
+                            </form>
+                            <div class="flex justify-center  text-[#164863] mt-4">
+                                <a class="hover:text-blue-500 text-xl" href="{% url 'register' %}">ลงทะเบียน/Register</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    
+</body>
+</html>

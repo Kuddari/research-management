@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/edit_profile.css' %}">
+    <title>ลงทะเบียนนักวิจัย</title>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <div class="relative min-h-screen font-minimon text-[#164863]">
+        {% if user.is_authenticated %}
+        <div class="pt-4 md:pt-8">
+        {% else %}
+        <div class="pt-4 md:pt-16">
+        {% endif %}
+            <div class="py-2 px-4 mb-4 text-xl md:text-2xl bg-gradient-to-r from-[#DDF2FD] to-[#ffffff]  min-h-[100px] md:min-h-[180px] drop-shadow-md shadow">
+            </div>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="flex justify-between px-4 md:pl-36">
+                    <div class="relative inline-block -mt-16 md:-mt-24 w-fit">
+                        {% if user_profile.profile_picture %}
+                            <img id="profilePicturePreview" class="w-24 h-24 md:w-32 md:h-32" src="{{ user_profile.profile_picture.url }}" alt="Profile Picture Preview">
+                        {% else %}
+                            <img id="profilePicturePreview" class="w-24 h-24 md:w-32 md:h-32 rounded-sm drop-shadow-md shadow-sm" src="{% static 'images/login-animation.gif' %}" alt="Profile Picture Preview">
+                        {% endif %}
+                        <label for="profilePictureInput" class="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center opacity-0 hover:opacity-100 cursor-pointer h-[72%]">
+                            <span class="text-center text-white font-semibold">เปลี่ยนรูปโปรไฟล์</span>
+                        </label>
+                        <input type="file" id="profilePictureInput" name="profile_picture"  accept="image/*" onchange="previewProfilePicture(event)" class="hidden">
+                    </div>
+                    
+                    <div class="-translate-y-14 flex flex-col -mr-10 md:mr-16">
+                        <input class="border-none outline-none focus:outline-none focus:ring-0 border-transparent bg-transparent text-xl md:text-2xl" name="name_lastname_th" value="{{ user_profile.name_lastname_th }}">
+                        <input class="border-none outline-none focus:outline-none focus:ring-0 border-transparent bg-transparent text-xl md:text-2xl -mt-3" name="name_lastname_en" value="{{ user_profile.name_lastname_en }}">
+                    </div>
+                </div>
+                <div class="mx-8 mb-4 md:ml-44 md:-mt-3">
+                    <h1 class="text-lg md:text-xl">เลือกตำแหน่ง : 
+                    <select name="position" id="position" class="w-52 md:w-fit border-none outline-none focus:outline-none focus:ring-0 border-transparent bg-transparent text-xl">
+                        <option class="text-sm md:text-lg lg:text-xl" value="{{ user_profile.position }}">{{ user_profile.position }}</option>
+                        {% for choice in position %}
+                        <option class="text-sm md:text-lg lg:text-xl" value="{{ choice.0 }}">{{choice.1}}</option>
+                        {% endfor %}
+                    </select>
+    
+                    </h1>
+                    
+                </div>
+                <div class="mx-8 grid grid-cols-1 lg:grid-cols-2 gap-y-4  lg:gap-x-20 my-4 md:ml-44 lg:my-14 text-lg md:text-xl">
+                    <h1>สังกัด / คณะ : <select name="faculty" id="faculty" class="w-52 md:w-fit border-none outline-none focus:outline-none focus:ring-0 border-transparent bg-transparent text-lg md:text-xl">
+                            <option class="text-sm md:text-lg lg:text-xl" value="{{user_profile.faculty.id}}">{{user_profile.faculty}}</option>
+                            {% for faculty in faculties %}
+                            <option class="text-sm md:text-lg lg:text-xl" value="{{ faculty.id }}">{{ faculty.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </h1>
+                    <h1>ฝ่ายงาน / สาขา : 
+                        <select name="department" id="department"  class="w-52 md:w-fit border-none outline-none focus:outline-none focus:ring-0 border-transparent bg-transparent text-lg md:text-xl">
+                            <option class="text-sm md:text-lg lg:text-xl" value="{{user_profile.department.id}}">{{user_profile.department.name}}</option>
+                        </select>
+                    </h1>
+                </div>
+    
+                <div class="mx-8 grid grid-cols-1 lg:grid-cols-2 gap-y-4 lg:gap-x-20 md:ml-44 lg:my-14 text-lg md:text-xl mb-12">
+                    <h1>Email : <input type="email" name="email" class="w-52 md:w-72 border-none outline-none focus:outline-none focus:ring-0 border-transparent bg-transparent text-lg md:text-xl" value="{{ user_profile.email }}"></h1>
+                    <h1>โทรศัพท์ : <input type="text" name="telephone_number" class="w-52 md:w-fit border-none outline-none focus:outline-none focus:ring-0 border-transparent bg-transparent text-lg md:text-xl" value="{{ user_profile.telephone_number }}"></h1>
+                </div>
+    
+                <div class="mr-40 mb-4 text-right text-lg md:text-xl">
+                    <button type="submit" class="py-2 px-4 bg-[#164863] hover:bg-white text-white hover:text-[#164863]  rounded-full drop-shadow-md shadow">ยืนยัน</button>
+                </div>
+            </form>
+    </div>
+
+    
+    <script src="{% static 'js/javascripts.js' %}"></script>
+    <script>
+        function previewProfilePicture(event) {
+            var reader = new FileReader();
+            reader.onload = function() {
+                var output = document.getElementById('profilePicturePreview');
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
+
+
+</body>
+</html>
