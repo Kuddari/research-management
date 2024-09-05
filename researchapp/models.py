@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import RegexValidator
 
 
 
@@ -91,9 +92,10 @@ class Researcher(models.Model):
     ]
 
     POSITION_CHOICES = [
-        ('Manager', 'Manager'),
-        ('Developer', 'Developer'),
-        ('Designer', 'Designer'),
+        ('ศาสตราจารย์', 'ศาสตราจารย์'),
+        ('รองศาสตาจารย์', 'รองศาสตาจารย์'),
+        ('ผู้ช่วยศาสตาจารย์', 'ผู้ช่วยศาสตาจารย์'),
+        ('อาจารย์', 'อาจารย์'),
         # Add more positions as needed
     ]
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='researcher_profile')
