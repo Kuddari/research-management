@@ -218,7 +218,15 @@
 
                 <div class="flex flex-col px-8 gap-y-1">
                     <label for="money" class="text-base md:text-xl">จำนวน<span class="text-red-600"> *</span></label>
-                    <input type="text" name="money" placeholder="0" value="{{form_data.money}}" class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none" required>
+                    <input 
+                        type="text" 
+                        id="moneyInput"
+                        name="money" 
+                        placeholder="0" 
+                        value="{{form_data.money}}" 
+                        class="py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:ring-opacity-50 focus:outline-none" 
+                        required
+                    >
                 </div>
 
             </div>
@@ -452,6 +460,41 @@
         }
         
     </script>
+    
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const moneyInput = document.getElementById('moneyInput');
 
+    moneyInput.addEventListener('input', function(e) {
+        // ลบทุกอักขระที่ไม่ใช่ตัวเลข
+        let value = this.value.replace(/\D/g, '');
+        
+        // แปลงเป็นจำนวนเต็ม
+        let intValue = parseInt(value, 10);
+        
+        // ถ้าเป็นตัวเลขที่ถูกต้อง ให้จัดรูปแบบ
+        if (!isNaN(intValue)) {
+            // จัดรูปแบบตัวเลขด้วยจุลภาค
+            let formattedValue = intValue.toLocaleString('th-TH');
+            
+            // แสดงค่าที่จัดรูปแบบแล้วใน input
+            this.value = formattedValue;
+            
+            // เก็บค่าที่ไม่มีจุลภาคไว้ใน data attribute
+            this.dataset.rawValue = intValue;
+        } else {
+            // ถ้าไม่ใช่ตัวเลข ให้เคลียร์ค่า
+            this.value = '';
+            this.dataset.rawValue = '';
+        }
+    });
+
+    // เพิ่ม event listener สำหรับ form submission
+    moneyInput.form.addEventListener('submit', function(e) {
+        // ใช้ค่าที่ไม่มีจุลภาคเมื่อ submit form
+        moneyInput.value = moneyInput.dataset.rawValue;
+    });
+});
+</script>
 </body>
 </html>
