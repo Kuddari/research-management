@@ -70,7 +70,7 @@
                     <h1>ยุทธศาสตร์</h1>
                 </div>
                 <div class="flex-1 text-left px-4">
-                    <h1>{{research_project.strategic}}</h1>
+                    <h1>{{research_project.strategic_choice}}</h1>
                 </div>
             </div>
 
@@ -119,7 +119,10 @@
                     <h1>แหล่งเงินทุน</h1>
                 </div>
                 <div class="flex-1 text-left px-4">
-                    <h1>มหาวิทยาลัยฟาฏอนี</h1>
+                    {% for fund in research_project.fund.all %}
+
+                    <h1>{{fund}}</h1>
+                    {% endfor %}
                 </div>
             </div>
 
@@ -127,8 +130,10 @@
                 <div class="w-1/3 lg:w-1/4 px-2 md:px-4 lg:px-8 bg-gradient-to-r from-[#DDF2FD] to-[#ffffff] text-left lg:text-right rounded-sm drop-shadow-md shadow">
                     <h1>จำนวน</h1>
                 </div>
+                {% load humanize %}
+
                 <div class="flex-1 text-left px-4">
-                    <h1>100,000</h1>
+                    <h1>{{ research_project.money|intcomma }} บาท</h1>
                 </div>
             </div>
 
@@ -137,7 +142,9 @@
                     <h1>หน่วยงานสนับสนุน</h1>
                 </div>
                 <div class="flex-1 text-left px-4">
-                    <h1>หน่วยงานรัฐบาล</h1>
+                    {% for agency in research_project.agency.all %}
+                    <h1>{{agency}}</h1>
+                    {% endfor %}
                 </div>
             </div>  
 
