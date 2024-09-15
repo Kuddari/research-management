@@ -61,15 +61,15 @@
                             {% if request.user.researcher_profile.id == user_profile.id or request.user.researcher_profile.usertype == 'main_admin' %}
                             <div class="flex md:flex-row justify-between mx-4 md:mx-24 py-2 px-4 md:pl-16 md:pr-8 my-3 text-sm md:text-xl rounded bg-gray-100 drop-shadow-md shadow">
                                 <h1 class="">{{ project.research_nameTH }}</h1>
-                                <div class="flex flex-row gap-8">
-                                    <h1 class="">{{ researcher.research_position }}</h1>
+                                <div class="flex flex-row  gap-8">
+                                    <h1 class="w-[100px]">{{ researcher.research_position }}</h1>
                                     <a class="hover:text-blue-500" href="{% url 'edit_research_project' id=project.id %}"><i class="fa-solid fa-gear"></i></a>
                                 </div>
                             </div>
                             {% else %}
                             <div class="flex md:flex-row justify-between mx-4 md:mx-24 py-2 px-4 md:px-16 my-3 text-sm md:text-xl rounded bg-gray-100 drop-shadow-md shadow">
-                                <h1 class="">{{ project.research_nameTH }}</h1>
-                                <h1 class="">{{ researcher.research_position }}</h1>
+                                <h1>{{ project.research_nameTH }}</h1>
+                                <h1 class="w-[100px]">{{ researcher.research_position }}</h1>
                             </div>
                             {% endif %}
 
@@ -106,16 +106,16 @@
                         {% if researcher.name == user_profile %}
                         {% if request.user.researcher_profile.id == user_profile.id or request.user.researcher_profile.usertype == 'main_admin' %}
                             <div class="flex md:flex-row justify-between mx-4 md:mx-24 py-2 px-4 md:pl-16 md:pr-8 my-3 text-sm md:text-xl rounded bg-gray-100 drop-shadow-md shadow">
-                                <h1 class="">{{ project.research_nameTH }}</h1>
+                                <h1>{{ project.research_nameTH }}</h1>
                                 <div class="flex flex-row gap-8">
-                                    <h1 class="">{{ researcher.research_position }}</h1>
+                                    <h1 class="w-[100px]">{{ researcher.research_position }}</h1>
                                     <a class="hover:text-blue-500" href="{% url 'edit_research' id=project.id %}"><i class="fa-solid fa-gear"></i></a>
                                 </div>
                             </div>
                             {% else %}
                             <div class="flex md:flex-row justify-between mx-4 md:mx-24 py-2 px-4 md:px-16 my-3 text-sm md:text-xl rounded bg-gray-100 drop-shadow-md shadow">
                                 <h1 class="">{{ project.research_nameTH }}</h1>
-                                <h1 class="">{{ researcher.research_position }}</h1>
+                                <h1 class="w-[100px]">{{ researcher.research_position }}</h1>
                             </div>
                             {% endif %}
                         {% endif %}                    
@@ -152,14 +152,14 @@
                             <div class="flex md:flex-row justify-between mx-4 md:mx-24 py-2 px-4 md:pl-16 md:pr-8 my-3 text-sm md:text-xl rounded bg-gray-100 drop-shadow-md shadow">
                                 <h1 class="">{{ project.workTH }}</h1>
                                 <div class="flex flex-row gap-8">
-                                    <h1 class="">{{ researcher.research_position }}</h1>
+                                    <h1 class="w-[100px]">{{ researcher.research_position }}</h1>
                                     <a class="hover:text-blue-500" href="{% url 'edit_academic' id=project.id %}"><i class="fa-solid fa-gear"></i></a>
                                 </div>
                             </div>
                             {% else %}
                             <div class="flex md:flex-row justify-between mx-4 md:mx-24 py-2 px-4 md:px-16 my-3 text-sm md:text-xl rounded bg-gray-100 drop-shadow-md shadow">
-                                <h1 class="">{{ project.workTH }}</h1>
-                                <h1 class="">{{ researcher.research_position }}</h1>
+                                <h1>{{ project.workTH }}</h1>
+                                <h1 class="w-[100px]">{{ researcher.research_position }}</h1>
                             </div>
                             {% endif %}
                         {% endif %}                    
@@ -195,13 +195,13 @@
                         <div class="flex md:flex-row justify-between mx-4 md:mx-24 py-2 px-4 md:pl-16 md:pr-8 my-3 text-sm md:text-xl rounded bg-gray-100 drop-shadow-md shadow">
                             <h1>{{ project.research_name }}</h1>
                             <div class="flex flex-row gap-8">
-                                <h1 class="">{{ researcher.research_position }}</h1>
+                                <h1 class="w-[100px]">{{ researcher.research_position }}</h1>
                                 <a class="hover:text-blue-500" href="{% url 'edit_researchperformance' id=project.id %}"><i class="fa-solid fa-gear"></i></a>
                             </div>
                             {% else %}
                             <div class="flex md:flex-row justify-between mx-4 md:mx-24 py-2 px-4 md:pl-16 md:pr-16 my-3 text-sm md:text-xl rounded bg-gray-100 drop-shadow-md shadow">
                                 <h1>{{ project.research_name }}</h1>
-                                <h1>{{ researcher.research_position }}</h1>
+                                <h1 class="w-[100px]">{{ researcher.research_position }}</h1>
                             </div>
                             {% endif %}
                         {% endif %}                    
