@@ -1153,6 +1153,10 @@ select {
   width: 15rem;
 }
 
+.w-\[240px\] {
+  width: 240px;
+}
+
 .w-\[90\%\] {
   width: 90%;
 }
@@ -1164,6 +1168,18 @@ select {
 
 .w-full {
   width: 100%;
+}
+
+.w-\[400px\] {
+  width: 400px;
+}
+
+.w-\[100px\] {
+  width: 100px;
+}
+
+.w-\[80px\] {
+  width: 80px;
 }
 
 .min-w-\[320px\] {
