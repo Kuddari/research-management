@@ -1477,7 +1477,7 @@ def edit_research_project(request, id):
     user_researcher = Researcher.objects.filter(user=request.user).first()
 
     # Check if the user is an admin
-    if user_researcher and user_researcher.usertype in 'main_admin':
+    if user_researcher or user_researcher.usertype in 'main_admin':
         # Admins can edit any project
         pass
     else:
@@ -1602,7 +1602,7 @@ def edit_research(request, id):
     research_project = get_object_or_404(Research_model, id=id)
     user_researcher = Researcher.objects.filter(user=request.user).first()
 
-    if user_researcher and user_researcher.usertype in 'main_admin':
+    if user_researcher or user_researcher.usertype in 'main_admin':
         # Admins can edit any project
         pass
     else:
@@ -1829,7 +1829,7 @@ def edit_academic(request, id):
     districts = District.objects.values_list('name_th', flat=True).distinct()
     provinces = Province.objects.values_list('name_th', flat=True).distinct()
 
-    if user_researcher and user_researcher.usertype in 'main_admin':
+    if user_researcher or user_researcher.usertype in 'main_admin':
         # Admins can edit any project
         pass
     else:
