@@ -1475,34 +1475,34 @@ def delete_agency(request, agency_id):
 def edit_research_project(request, id):
     research_project = get_object_or_404(ResearchProject, id=id)
     user_researcher = Researcher.objects.filter(user=request.user).first()
-    if not user_researcher:
-        return HttpResponseForbidden("นี้ไม่ใช่โครงการวิจัยของคุณไม่สามารถแก้ไขได้")
 
-    # Check if the user is listed as an internal or external researcher for the project
-    internal_researchers = research_project.internal_researchers.filter(name=user_researcher)
-    external_researchers = research_project.external_researchers.filter(name=user_researcher.user)
+    # Check if the user is an admin
+    if user_researcher and user_researcher.usertype in 'main_admin':
+        # Admins can edit any project
+        pass
+    else:
+        # Check if the user is listed as an internal or external researcher for the project
+        if not user_researcher:
+            return HttpResponseForbidden("นี้ไม่ใช่โครงการวิจัยของคุณไม่สามารถแก้ไขได้")
 
-    if not internal_researchers.exists() and not external_researchers.exists():
-        return HttpResponseForbidden("นี้ไม่ใช่โครงการวิจัยของคุณไม่สามารถแก้ไขได้")
+        internal_researchers = research_project.internal_researchers.filter(name=user_researcher)
+        external_researchers = research_project.external_researchers.filter(name=user_researcher.user)
 
-    
+        if not internal_researchers.exists() and not external_researchers.exists():
+            return HttpResponseForbidden("นี้ไม่ใช่โครงการวิจัยของคุณไม่สามารถแก้ไขได้")
+
     if 'btnaddfund' in request.POST:
         # Get the value of the new fund from the form
         new_fund_from = request.POST.get('addfund')
-
         # Create a new Fund object and save it to the database
         Fund.objects.create(fund_from=new_fund_from)
-
-        # Redirect back to the same page after adding the fund
         return redirect('edit_research_project', id=research_project.id)
+
     if 'btnaddagency' in request.POST:
-        # Get the value of the new fund from the form
+        # Get the value of the new agency from the form
         new_agency_from = request.POST.get('addagency')
-
-        # Create a new Fund object and save it to the database
+        # Create a new Agency object and save it to the database
         Agency.objects.create(agency_from=new_agency_from)
-
-        # Redirect back to the same page after adding the fund
         return redirect('edit_research_project', id=research_project.id)
 
     if request.method == 'POST':
@@ -1511,20 +1511,11 @@ def edit_research_project(request, id):
         strategic_name = request.POST.get('strategic')
         faculty_instance, created = Faculty.objects.get_or_create(name=faculty_name)
         department_instance = Department.objects.filter(name=department_name, faculty=faculty_instance).first()
-        strategic_instance = strategic.objects.filter(name=strategic_name).first()  # Retrieve the specific strategic instance
+        strategic_instance = strategic.objects.filter(name=strategic_name).first()
 
-
-        if department_instance:
-            # Department with the same name and faculty already exists, update its fields if needed
-            # Update department fields if necessary
-            # For example:
-            # department_instance.some_field = request.POST.get('some_field', department_instance.some_field)
-            department_instance.save()
-        else:
-            # Create new Department instance if it doesn't exist
+        if not department_instance:
             department_instance = Department.objects.create(name=department_name, faculty=faculty_instance)
 
-        # Basic project information update
         research_project.research_code = request.POST.get('research_code', research_project.research_code)
         research_project.research_nameTH = request.POST.get('research_nameTH', research_project.research_nameTH)
         research_project.research_nameEN = request.POST.get('research_nameEN', research_project.research_nameEN)
@@ -1535,70 +1526,50 @@ def edit_research_project(request, id):
         research_project.strategic_choice = strategic_instance
         research_project.status = request.POST.get('status', research_project.status)
         research_project.money = request.POST.get('money', research_project.money)
-        # Get the date string from the POST data
+
         date_time = request.POST.get('date')
-        date = datetime.strptime(date_time, '%d-%m-%Y')
-        research_project.date_promise = date
-        # Handling file uploads
+        research_project.date_promise = datetime.strptime(date_time, '%d-%m-%Y')
+
         if 'fileInput' in request.FILES:
             research_project.file = request.FILES['fileInput']
-        
 
-        # Fetch current internal researcher relationships
+        # Update internal researchers
         current_internal_researchers = research_project.internal_researchers.all()
-
-        # Lists from the form submission
         updated_internal_ids = request.POST.getlist('name_inside')
         updated_internal_positions = request.POST.getlist('position_inside')
-
-        # Convert IDs from strings to integers
         updated_internal_ids = [int(id) for id in updated_internal_ids]
 
-        # Update and Remove Logic for Internal Researchers
         for current_researcher in current_internal_researchers:
             if current_researcher.id not in updated_internal_ids:
-                # Remove researchers not in the updated list
                 research_project.internal_researchers.remove(current_researcher)
             else:
-                # Update existing researchers
                 index = updated_internal_ids.index(current_researcher.id)
                 current_researcher.research_position = updated_internal_positions[index]
                 current_researcher.save()
 
-        # Adding New Researchers
         for id, position in zip(updated_internal_ids, updated_internal_positions):
             if not Internal_researcher.objects.filter(id=id).exists():
-                # Fetch the Researcher instance
                 researcher_instance = Researcher.objects.get(id=id)
-                # Create a new Internal_researcher instance and add to the project
                 new_internal_researcher = Internal_researcher.objects.create(
                     name=researcher_instance, 
                     research_position=position
                 )
                 research_project.internal_researchers.add(new_internal_researcher)
-        
-     # Clear the existing many-to-many relationships for external_researchers
-        research_project.external_researchers.clear()
 
-        # Assuming 'name_outside' and 'position_outside' are the correct form field names
+        research_project.external_researchers.clear()
         updated_external_names = request.POST.getlist('name_outside')
         updated_external_positions = request.POST.getlist('position_outside')
 
         for name, position in zip(updated_external_names, updated_external_positions):
-            # Instead of get_or_create, use filter().first() to safely handle duplicates
             researcher = External_researcher.objects.filter(name=name, research_position=position).first()
-
             if researcher:
-                # If a matching researcher is found, use it
                 research_project.external_researchers.add(researcher)
             else:
-                # If no matching researcher, create a new one
                 new_researcher = External_researcher.objects.create(name=name, research_position=position)
                 research_project.external_researchers.add(new_researcher)
 
         research_project.save()
 
-        # Update ManyToMany fields for funds and agencies
         fund_ids = request.POST.getlist('fund', [])
         if fund_ids:
             research_project.fund.set(Fund.objects.filter(id__in=fund_ids))
@@ -1607,14 +1578,9 @@ def edit_research_project(request, id):
         if agency_ids:
             research_project.agency.set(Agency.objects.filter(id__in=agency_ids))
 
-        # Example of handling internal researchers (simplified, see note below)
-        # You would do similar for external researchers, funds, and agencies
-
-        # Redirect to a success page, or back to the form with a success message
-        return redirect('home')  # Make sure to replace 'some_success_url' with your actual URL name
+        return redirect('home')
 
     else:
-        # Preparing context for GET request, including all necessary objects
         context = {
             'research_project': research_project,
             'researchers': Researcher.objects.all(),
@@ -1636,8 +1602,13 @@ def edit_research(request, id):
     research_project = get_object_or_404(Research_model, id=id)
     user_researcher = Researcher.objects.filter(user=request.user).first()
 
-    if not user_researcher:
-        return HttpResponseForbidden("นี้ไม่ใช่ผลงานวิจัยของคุณไม่สามารถแก้ไขได้")
+    if user_researcher and user_researcher.usertype in 'main_admin':
+        # Admins can edit any project
+        pass
+    else:
+        # Check if the user is listed as an internal or external researcher for the project
+        if not user_researcher:
+            return HttpResponseForbidden("นี้ไม่ใช่โครงการวิจัยของคุณไม่สามารถแก้ไขได้")
 
     # Check if the user is listed as an internal or external researcher for the project
     internal_researchers = research_project.internal_researchers.filter(name=user_researcher)
@@ -1858,8 +1829,13 @@ def edit_academic(request, id):
     districts = District.objects.values_list('name_th', flat=True).distinct()
     provinces = Province.objects.values_list('name_th', flat=True).distinct()
 
-    if not user_researcher:
-        return HttpResponseForbidden("นี้ไม่ใช่งานบริการวิชาการของคุณไม่สามารถแก้ไขได้")
+    if user_researcher and user_researcher.usertype in 'main_admin':
+        # Admins can edit any project
+        pass
+    else:
+        # Check if the user is listed as an internal or external researcher for the project
+        if not user_researcher:
+            return HttpResponseForbidden("นี้ไม่ใช่โครงการวิจัยของคุณไม่สามารถแก้ไขได้")
 
     # Check if the user is listed as an internal or external researcher for the project
     internal_researchers = academic_project.internal_researchers.filter(name=user_researcher)
